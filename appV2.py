@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 import tempfile
+import os
 
 from rules_v2 import infer_section_from_url, choose_family
 from render_v2 import build_post_html
@@ -59,9 +60,32 @@ def html_to_png_bytes(html: str, width: int = 1080, height: int = 1350) -> bytes
 
         html_path.write_text(html, encoding="utf-8")
 
+        chromium_candidates = [
+            "/usr/bin/chromium",
+            "/usr/bin/chromium-browser",
+        ]
+
+        chromium_path = next((p for p in chromium_candidates if os.path.exists(p)), None)
+
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True, args=["--disable-dev-shm-usage"])
-            page = browser.new_page(viewport={"width": width, "height": height}, device_scale_factor=1)
+            launch_args = {
+                "headless": True,
+                "args": [
+                    "--disable-dev-shm-usage",
+                    "--no-sandbox",
+                    "--disable-setuid-sandbox",
+                ],
+            }
+
+            if chromium_path:
+                browser = p.chromium.launch(executable_path=chromium_path, **launch_args)
+            else:
+                browser = p.chromium.launch(**launch_args)
+
+            page = browser.new_page(
+                viewport={"width": width, "height": height},
+                device_scale_factor=1
+            )
 
             page.goto(html_path.as_uri(), wait_until="load")
             page.screenshot(path=str(img_path), full_page=True)
