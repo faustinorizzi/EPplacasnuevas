@@ -200,7 +200,7 @@ def fetch_article_data(url: str) -> dict:
         except Exception:
             image_data = ""
 
-    logo_data = file_to_base64("logo.png")
+    logo_data = file_to_base64("logo_white.png") or file_to_base64("logo.png")
 
     return {
         "url": url,
@@ -214,10 +214,11 @@ def fetch_article_data(url: str) -> dict:
     }
 
 
-def html_to_png_bytes(html: str, width: int = 1080, height: int = 1350) -> bytes:
+def html_to_image_bytes(html: str, width: int = 1080, height: int = 1350, fmt: str = "jpeg", quality: int = 88) -> bytes:
     with tempfile.TemporaryDirectory() as tmpdir:
         html_path = Path(tmpdir) / "preview.html"
-        img_path = Path(tmpdir) / "preview.png"
+        ext = "jpg" if fmt.lower() in ["jpeg", "jpg"] else "png"
+        img_path = Path(tmpdir) / f"preview.{ext}"
 
         html_path.write_text(html, encoding="utf-8")
 
@@ -248,7 +249,12 @@ def html_to_png_bytes(html: str, width: int = 1080, height: int = 1350) -> bytes
             )
 
             page.goto(html_path.as_uri(), wait_until="load")
-            page.screenshot(path=str(img_path), full_page=True)
+
+            if fmt.lower() in ["jpeg", "jpg"]:
+                page.screenshot(path=str(img_path), type="jpeg", quality=quality, full_page=True)
+            else:
+                page.screenshot(path=str(img_path), type="png", full_page=True)
+
             browser.close()
 
         return img_path.read_bytes()
@@ -263,6 +269,7 @@ with st.form("url_form"):
         "Pegá la URL de una nota",
         placeholder="https://el-periodico.com.ar/local/..."
     )
+    output_format = st.selectbox("Formato de descarga", ["JPG", "PNG"], index=0)
     submitted = st.form_submit_button("Generar preview")
 
 if submitted:
@@ -288,13 +295,14 @@ if submitted:
             logo_data=article["logo_data"],
         )
 
-        png_bytes = html_to_png_bytes(html)
+        fmt = "jpeg" if output_format == "JPG" else "png"
+        image_bytes = html_to_image_bytes(html, fmt=fmt)
 
         col1, col2 = st.columns([1.1, 0.9])
 
         with col1:
             st.subheader("Preview")
-            st.image(png_bytes, use_container_width=True)
+            st.image(image_bytes, use_container_width=True)
 
         with col2:
             st.subheader("Datos detectados")
@@ -304,11 +312,14 @@ if submitted:
             st.write(f"**Título:** {article['title']}")
             st.write(f"**URL de imagen usada:** {article['image_url'] or '—'}")
 
+            file_name = "placa_v2.jpg" if fmt == "jpeg" else "placa_v2.png"
+            mime = "image/jpeg" if fmt == "jpeg" else "image/png"
+
             st.download_button(
-                "Descargar PNG",
-                data=png_bytes,
-                file_name="placa_v2.png",
-                mime="image/png",
+                f"Descargar {output_format}",
+                data=image_bytes,
+                file_name=file_name,
+                mime=mime,
             )
 
     except Exception as e:
