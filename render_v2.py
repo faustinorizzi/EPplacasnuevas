@@ -1,31 +1,26 @@
-def section_label(family: str) -> str:
-    labels = {
-        "general_a": "GENERAL",
-        "general_b": "GENERAL",
-        "deportes": "DEPORTES",
-        "policiales": "POLICIALES",
-    }
-    return labels.get(family, "GENERAL")
+def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
+    if image_data:
+        return f"background-image: linear-gradient({overlay_top}, {overlay_bottom}), url('{image_data}');"
+    return f"background: linear-gradient(135deg, {fallback_a} 0%, {fallback_b} 100%);"
 
 
-def safe_bg(image_url: str) -> str:
-    if image_url:
-        return f"background-image: linear-gradient(rgba(0,0,0,.28), rgba(0,0,0,.65)), url('{image_url}');"
-    return "background: linear-gradient(135deg, #1a1f1b 0%, #0f120f 100%);"
+def logo_html(logo_data: str) -> str:
+    if not logo_data:
+        return ""
+    return f'<img src="{logo_data}" alt="El Periódico" class="brand-logo" />'
 
 
-def build_post_html(title: str, description: str, image_url: str, section: str, family: str, brand: str) -> str:
+def build_post_html(title: str, description: str, image_data: str, section_label: str, family: str, logo_data: str) -> str:
     title = (title or "").strip()
     description = (description or "").strip()
-    label = section_label(family)
 
     if family == "general_b":
-        return build_general_b(title, description, image_url, label, brand)
+        return build_general_b(title, description, image_data, section_label, logo_data)
     if family == "deportes":
-        return build_deportes(title, description, image_url, label, brand)
+        return build_deportes(title, description, image_data, section_label, logo_data)
     if family == "policiales":
-        return build_policiales(title, description, image_url, label, brand)
-    return build_general_a(title, description, image_url, label, brand)
+        return build_policiales(title, description, image_data, section_label, logo_data)
+    return build_general_a(title, description, image_data, section_label, logo_data)
 
 
 def global_styles() -> str:
@@ -51,16 +46,6 @@ def global_styles() -> str:
         font-family: 'Inter', sans-serif;
       }
 
-      .brand {
-        position: absolute;
-        left: 56px;
-        bottom: 46px;
-        font-size: 28px;
-        font-weight: 800;
-        letter-spacing: .02em;
-        z-index: 5;
-      }
-
       .section {
         position: absolute;
         top: 52px;
@@ -74,24 +59,51 @@ def global_styles() -> str:
 
       .title {
         font-family: 'Passion One', sans-serif;
-        line-height: 1.02;
-        letter-spacing: .01em;
+        line-height: 1.01;
+        letter-spacing: .005em;
         margin: 0;
       }
 
       .desc {
         margin: 18px 0 0 0;
-        font-size: 33px;
+        font-size: 31px;
         line-height: 1.24;
         font-weight: 600;
         max-width: 900px;
+      }
+
+      .brand-wrap {
+        position: absolute;
+        left: 56px;
+        bottom: 42px;
+        z-index: 6;
+      }
+
+      .brand-logo {
+        display: block;
+        width: 250px;
+        height: auto;
+      }
+
+      .accent-bar {
+        position: absolute;
+        left: 56px;
+        bottom: 24px;
+        z-index: 6;
       }
     </style>
     """
 
 
-def build_general_a(title, description, image_url, label, brand) -> str:
-    bg = safe_bg(image_url)
+def build_general_a(title, description, image_data, section_label, logo_data) -> str:
+    bg = safe_bg_style(
+        image_data=image_data,
+        overlay_top="rgba(0,0,0,.20)",
+        overlay_bottom="rgba(0,0,0,.72)",
+        fallback_a="#1a1f1b",
+        fallback_b="#0f120f",
+    )
+
     return f"""
     <html>
       <head>
@@ -108,39 +120,40 @@ def build_general_a(title, description, image_url, label, brand) -> str:
             position: absolute;
             left: 56px;
             right: 56px;
-            bottom: 110px;
+            bottom: 132px;
             z-index: 4;
           }}
           .ga .title {{
-            font-size: 92px;
-            max-width: 920px;
+            font-size: 84px;
+            max-width: 930px;
           }}
-          .ga .accent {{
-            position: absolute;
-            left: 56px;
-            bottom: 32px;
-            width: 180px;
+          .ga .section {{
+            color: #fff;
+          }}
+          .ga .accent-bar {{
+            width: 190px;
             height: 10px;
             background: #1f8b4c;
-            z-index: 5;
           }}
         </style>
       </head>
       <body>
         <div class="canvas ga">
-          <div class="section">{label}</div>
+          <div class="section">{section_label}</div>
           <div class="title-wrap">
             <h1 class="title">{title}</h1>
           </div>
-          <div class="brand">{brand}</div>
-          <div class="accent"></div>
+          <div class="brand-wrap">{logo_html(logo_data)}</div>
+          <div class="accent-bar"></div>
         </div>
       </body>
     </html>
     """
 
 
-def build_general_b(title, description, image_url, label, brand) -> str:
+def build_general_b(title, description, image_data, section_label, logo_data) -> str:
+    photo_style = f"background-image: url('{image_data}');" if image_data else "background: linear-gradient(135deg, #273126 0%, #1a2119 100%);"
+
     return f"""
     <html>
       <head>
@@ -156,8 +169,8 @@ def build_general_b(title, description, image_url, label, brand) -> str:
             top: 0;
             left: 0;
             width: 1080px;
-            height: 780px;
-            background-image: url('{image_url}');
+            height: 760px;
+            {photo_style}
             background-size: cover;
             background-position: center;
           }}
@@ -165,7 +178,7 @@ def build_general_b(title, description, image_url, label, brand) -> str:
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(rgba(0,0,0,.10), rgba(0,0,0,.28));
+            background: linear-gradient(rgba(0,0,0,.10), rgba(0,0,0,.24));
           }}
           .gb .section {{
             color: #fff;
@@ -175,12 +188,12 @@ def build_general_b(title, description, image_url, label, brand) -> str:
             left: 0;
             right: 0;
             bottom: 0;
-            height: 570px;
+            height: 590px;
             background: #f3f2ef;
-            padding: 46px 56px 42px 56px;
+            padding: 48px 56px 48px 56px;
           }}
           .gb .bar {{
-            width: 18px;
+            width: 16px;
             height: 120px;
             background: #1f8b4c;
             position: absolute;
@@ -188,30 +201,40 @@ def build_general_b(title, description, image_url, label, brand) -> str:
             top: 56px;
           }}
           .gb .inner {{
-            margin-left: 42px;
+            margin-left: 40px;
           }}
           .gb .title {{
-            font-size: 76px;
+            font-size: 68px;
             color: #111;
             max-width: 900px;
           }}
-          .gb .brand {{
-            color: #111;
-            bottom: 38px;
+          .gb .desc {{
+            color: #3a3a3a;
+            font-size: 28px;
+            line-height: 1.25;
+            max-width: 890px;
+          }}
+          .gb .brand-wrap {{
+            left: 56px;
+            bottom: 34px;
+          }}
+          .gb .brand-logo {{
+            width: 250px;
+            filter: none;
           }}
         </style>
       </head>
       <body>
         <div class="canvas gb">
           <div class="photo"></div>
-          <div class="section">{label}</div>
+          <div class="section">{section_label}</div>
           <div class="panel">
             <div class="bar"></div>
             <div class="inner">
               <h1 class="title">{title}</h1>
               {"<p class='desc'>" + description + "</p>" if description else ""}
             </div>
-            <div class="brand">{brand}</div>
+            <div class="brand-wrap">{logo_html(logo_data)}</div>
           </div>
         </div>
       </body>
@@ -219,8 +242,14 @@ def build_general_b(title, description, image_url, label, brand) -> str:
     """
 
 
-def build_deportes(title, description, image_url, label, brand) -> str:
-    bg = f"background-image: linear-gradient(rgba(0,0,0,.20), rgba(0,0,0,.72)), url('{image_url}');" if image_url else "background: linear-gradient(135deg, #1a1f1b 0%, #0f120f 100%);"
+def build_deportes(title, description, image_data, section_label, logo_data) -> str:
+    bg = safe_bg_style(
+        image_data=image_data,
+        overlay_top="rgba(0,0,0,.18)",
+        overlay_bottom="rgba(0,0,0,.72)",
+        fallback_a="#1f221d",
+        fallback_b="#0f100c",
+    )
 
     return f"""
     <html>
@@ -238,40 +267,45 @@ def build_deportes(title, description, image_url, label, brand) -> str:
             position: absolute;
             left: 56px;
             right: 56px;
-            bottom: 110px;
+            bottom: 132px;
             z-index: 4;
           }}
           .dep .title {{
-            font-size: 96px;
-            max-width: 920px;
+            font-size: 86px;
+            max-width: 930px;
           }}
-          .dep .accent {{
-            position: absolute;
-            left: 56px;
-            bottom: 32px;
+          .dep .section {{
+            color: #fff;
+          }}
+          .dep .accent-bar {{
             width: 220px;
             height: 12px;
             background: #c96d2b;
-            z-index: 5;
           }}
         </style>
       </head>
       <body>
         <div class="canvas dep">
-          <div class="section">{label}</div>
+          <div class="section">{section_label}</div>
           <div class="title-wrap">
             <h1 class="title">{title}</h1>
           </div>
-          <div class="brand">{brand}</div>
-          <div class="accent"></div>
+          <div class="brand-wrap">{logo_html(logo_data)}</div>
+          <div class="accent-bar"></div>
         </div>
       </body>
     </html>
     """
 
 
-def build_policiales(title, description, image_url, label, brand) -> str:
-    bg = f"background-image: linear-gradient(rgba(0,0,0,.30), rgba(0,0,0,.82)), url('{image_url}');" if image_url else "background: linear-gradient(135deg, #171717 0%, #090909 100%);"
+def build_policiales(title, description, image_data, section_label, logo_data) -> str:
+    bg = safe_bg_style(
+        image_data=image_data,
+        overlay_top="rgba(0,0,0,.28)",
+        overlay_bottom="rgba(0,0,0,.82)",
+        fallback_a="#171717",
+        fallback_b="#090909",
+    )
 
     return f"""
     <html>
@@ -289,33 +323,32 @@ def build_policiales(title, description, image_url, label, brand) -> str:
             position: absolute;
             left: 56px;
             right: 56px;
-            bottom: 110px;
+            bottom: 132px;
             z-index: 4;
           }}
           .pol .title {{
-            font-size: 90px;
-            max-width: 920px;
+            font-size: 82px;
+            max-width: 930px;
           }}
-          .pol .accent {{
-            position: absolute;
-            left: 56px;
-            bottom: 32px;
+          .pol .section {{
+            color: #fff;
+          }}
+          .pol .accent-bar {{
             width: 180px;
             height: 8px;
             background: #ffffff;
             opacity: .95;
-            z-index: 5;
           }}
         </style>
       </head>
       <body>
         <div class="canvas pol">
-          <div class="section">{label}</div>
+          <div class="section">{section_label}</div>
           <div class="title-wrap">
             <h1 class="title">{title}</h1>
           </div>
-          <div class="brand">{brand}</div>
-          <div class="accent"></div>
+          <div class="brand-wrap">{logo_html(logo_data)}</div>
+          <div class="accent-bar"></div>
         </div>
       </body>
     </html>
