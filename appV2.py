@@ -6,12 +6,45 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 import tempfile
 import os
+import base64
 
-from rules_v2 import infer_section_from_url, choose_family
+from rules_v2 import infer_section_from_url, choose_family, display_section_label
 from render_v2 import build_post_html
 
 
 st.set_page_config(page_title="El Periódico - Placas V2", layout="wide")
+
+
+def file_to_base64(path: str) -> str:
+    p = Path(path)
+    if not p.exists():
+        return ""
+    mime = "image/png"
+    if p.suffix.lower() in [".jpg", ".jpeg"]:
+        mime = "image/jpeg"
+    encoded = base64.b64encode(p.read_bytes()).decode("utf-8")
+    return f"data:{mime};base64,{encoded}"
+
+
+def image_url_to_base64(url: str) -> str:
+    if not url:
+        return ""
+    headers = {"User-Agent": "Mozilla/5.0"}
+    resp = requests.get(url, headers=headers, timeout=20)
+    resp.raise_for_status()
+
+    content_type = resp.headers.get("Content-Type", "").lower()
+    if "jpeg" in content_type or "jpg" in content_type:
+        mime = "image/jpeg"
+    elif "png" in content_type:
+        mime = "image/png"
+    elif "webp" in content_type:
+        mime = "image/webp"
+    else:
+        mime = "image/jpeg"
+
+    encoded = base64.b64encode(resp.content).decode("utf-8")
+    return f"data:{mime};base64,{encoded}"
 
 
 def fetch_article_data(url: str) -> dict:
@@ -42,14 +75,24 @@ def fetch_article_data(url: str) -> dict:
         h1 = soup.find("h1")
         title = h1.get_text(" ", strip=True) if h1 else "Sin título"
 
-    section = infer_section_from_url(url)
+    raw_section = infer_section_from_url(url)
+    visible_section = display_section_label(url)
+
+    image_data = ""
+    if image_url:
+        try:
+            image_data = image_url_to_base64(image_url)
+        except Exception:
+            image_data = ""
 
     return {
         "url": url,
         "title": title,
         "description": description,
         "image_url": image_url,
-        "section": section,
+        "image_data": image_data,
+        "section": raw_section,
+        "section_label": visible_section,
     }
 
 
@@ -118,13 +161,15 @@ if submitted:
             description=article["description"],
         )
 
+        logo_data = file_to_base64("logo.png")
+
         html = build_post_html(
             title=article["title"],
             description=article["description"],
-            image_url=article["image_url"],
-            section=article["section"],
+            image_data=article["image_data"],
+            section_label=article["section_label"],
             family=family,
-            brand="EL PERIÓDICO",
+            logo_data=logo_data,
         )
 
         png_bytes = html_to_png_bytes(html)
@@ -137,11 +182,13 @@ if submitted:
 
         with col2:
             st.subheader("Datos detectados")
-            st.write(f"**Sección:** {article['section']}")
+            st.write(f"**Sección visible:** {article['section_label']}")
             st.write(f"**Familia asignada:** {family}")
             st.write(f"**Título:** {article['title']}")
             st.write(f"**Descripción:** {article['description'] or '—'}")
-            st.write(f"**Imagen:** {'Sí' if article['image_url'] else 'No'}")
+            st.write(f"**Imagen encontrada:** {'Sí' if article['image_url'] else 'No'}")
+            st.write(f"**Imagen embebida:** {'Sí' if article['image_data'] else 'No'}")
+            st.write(f"**Logo encontrado:** {'Sí' if logo_data else 'No'}")
 
             st.download_button(
                 "Descargar PNG",
