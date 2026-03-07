@@ -162,11 +162,11 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
             width: 220px;
           }}
 
-          .ga .accent-bar {
-    width: 300px;
-    height: 20px;
-    background: red;
-}
+          .ga .accent-bar {{
+            width: 175px;
+            height: 8px;
+            background: #1f8b4c;
+          }}
         </style>
       </head>
       <body>
@@ -185,6 +185,8 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
 
 def build_general_b(title, description, image_data, section_label, logo_data) -> str:
     photo_style = f"background-image: url('{image_data}');" if image_data else "background: linear-gradient(135deg, #273126 0%, #1a2119 100%);"
+
+    desc_html = f"<p class='desc'>{description}</p>" if description else ""
 
     return f"""
     <html>
@@ -277,7 +279,7 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
             <div class="bar"></div>
             <div class="inner">
               <h1 class="title">{title}</h1>
-              {"<p class='desc'>" + description + "</p>" if description else ""}
+              {desc_html}
             </div>
             <div class="brand-wrap">{logo_html(logo_data)}</div>
           </div>
