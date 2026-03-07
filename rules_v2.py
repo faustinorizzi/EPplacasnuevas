@@ -26,6 +26,31 @@ def infer_section_from_url(url: str) -> str:
     return mapping.get(first, "general")
 
 
+def display_section_label(url: str) -> str:
+    path = urlparse(url).path.strip("/")
+    if not path:
+        return "GENERAL"
+
+    first = path.split("/")[0].lower()
+
+    labels = {
+        "local": "LOCAL",
+        "region": "REGIÓN",
+        "el-pais": "EL PAÍS",
+        "mundo": "MUNDO",
+        "motor": "MOTOR",
+        "tecnologia": "TECNOLOGÍA",
+        "educacion": "EDUCACIÓN",
+        "negocios": "NEGOCIOS",
+        "salud": "SALUD",
+        "deportes": "DEPORTES",
+        "policiales": "POLICIALES",
+        "espectaculos": "ESPECTÁCULOS",
+    }
+
+    return labels.get(first, "GENERAL")
+
+
 def choose_family(section: str, title: str, description: str) -> str:
     title = (title or "").strip()
     description = (description or "").strip().lower()
@@ -39,7 +64,6 @@ def choose_family(section: str, title: str, description: str) -> str:
     if section == "general_b":
         return "general_b"
 
-    # General B solo a cuentagotas, con reglas mecánicas.
     keywords = [
         "invitan",
         "charla",
