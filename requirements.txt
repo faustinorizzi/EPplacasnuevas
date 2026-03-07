@@ -1,6 +1,4 @@
 streamlit
-feedparser
-playwright
-beautifulsoup4
 requests
-nest_asyncio
+beautifulsoup4
+playwright
