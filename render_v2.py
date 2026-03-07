@@ -1,4 +1,4 @@
-RENDER_VERSION = "GA-V2-CLEAN-02"
+RENDER_VERSION = "GA-V2-CLEAN-03"
 
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
@@ -50,21 +50,27 @@ def global_styles() -> str:
         font-family: 'Inter', sans-serif;
       }
 
-      .section {
+      .section-chip {
         position: absolute;
-        top: 54px;
+        top: 48px;
         left: 56px;
-        font-size: 22px;
+        padding: 12px 20px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.10);
+        border: 1px solid rgba(255,255,255,.18);
+        color: #fff;
+        font-size: 20px;
         font-weight: 800;
-        letter-spacing: .06em;
+        letter-spacing: .05em;
         text-transform: uppercase;
         z-index: 6;
+        backdrop-filter: blur(4px);
       }
 
       .title {
         font-family: 'Passion One', sans-serif;
         font-weight: 400;
-        line-height: 1.08;
+        line-height: 1.07;
         letter-spacing: 0;
         margin: 0;
       }
@@ -77,24 +83,27 @@ def global_styles() -> str:
         max-width: 820px;
       }
 
-      .brand-wrap {
+      .brand-wrap-center {
         position: absolute;
-        left: 56px;
+        left: 50%;
+        transform: translateX(-50%);
         bottom: 42px;
         z-index: 7;
         display: inline-flex;
         align-items: center;
+        justify-content: center;
       }
 
       .brand-logo {
         display: block;
-        width: 198px;
+        width: 230px;
         height: auto;
       }
 
-      .accent-bar {
+      .accent-bar-center {
         position: absolute;
-        left: 56px;
+        left: 50%;
+        transform: translateX(-50%);
         bottom: 22px;
         z-index: 7;
         border-radius: 2px;
@@ -107,7 +116,7 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
     bg = safe_bg_style(
         image_data=image_data,
         overlay_top="rgba(0,0,0,.07)",
-        overlay_bottom="rgba(0,0,0,.62)",
+        overlay_bottom="rgba(0,0,0,.60)",
         fallback_a="#1a1f1b",
         fallback_b="#0f120f",
     )
@@ -131,38 +140,33 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
             inset: 0;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.12) 0%,
-              rgba(0,0,0,0) 34%
+              rgba(0,0,0,.10) 0%,
+              rgba(0,0,0,0) 36%
             );
             z-index: 1;
             pointer-events: none;
           }}
 
-          .ga .section {{
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0,0,0,.18);
-          }}
-
           .ga .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 122px;
-            bottom: 188px;
+            right: 96px;
+            bottom: 186px;
             z-index: 5;
           }}
 
           .ga .title {{
-            font-size: 62px;
-            max-width: 790px;
+            font-size: 66px;
+            max-width: 860px;
             text-shadow: 0 2px 7px rgba(0,0,0,.16);
           }}
 
           .ga .brand-logo {{
-            width: 198px;
+            width: 232px;
           }}
 
-          .ga .accent-bar {{
-            width: 165px;
+          .ga .accent-bar-center {{
+            width: 150px;
             height: 7px;
             background: #1f8b4c;
           }}
@@ -170,12 +174,12 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
       </head>
       <body>
         <div class="canvas ga">
-          <div class="section">{section_label}</div>
+          <div class="section-chip">{section_label}</div>
           <div class="title-wrap">
             <h1 class="title">{title}</h1>
           </div>
-          <div class="brand-wrap">{logo_html(logo_data)}</div>
-          <div class="accent-bar"></div>
+          <div class="brand-wrap-center">{logo_html(logo_data)}</div>
+          <div class="accent-bar-center"></div>
         </div>
       </body>
     </html>
@@ -215,9 +219,9 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
             background: linear-gradient(rgba(0,0,0,.05), rgba(0,0,0,.16));
           }}
 
-          .gb .section {{
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0,0,0,.20);
+          .gb .section-chip {{
+            background: rgba(255,255,255,.14);
+            border: 1px solid rgba(255,255,255,.20);
           }}
 
           .gb .panel {{
@@ -245,7 +249,7 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
           }}
 
           .gb .title {{
-            font-size: 55px;
+            font-size: 57px;
             font-weight: 400;
             color: #111;
             max-width: 820px;
@@ -260,22 +264,33 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
             margin-top: 18px;
           }}
 
+          .gb .brand-wrap-center {{
+            bottom: 34px;
+          }}
+
           .gb .brand-logo {{
-            width: 198px;
+            width: 232px;
+          }}
+
+          .gb .accent-bar-center {{
+            width: 150px;
+            height: 7px;
+            background: #1f8b4c;
           }}
         </style>
       </head>
       <body>
         <div class="canvas gb">
           <div class="photo"></div>
-          <div class="section">{section_label}</div>
+          <div class="section-chip">{section_label}</div>
           <div class="panel">
             <div class="bar"></div>
             <div class="inner">
               <h1 class="title">{title}</h1>
               {desc_html}
             </div>
-            <div class="brand-wrap">{logo_html(logo_data)}</div>
+            <div class="brand-wrap-center">{logo_html(logo_data)}</div>
+            <div class="accent-bar-center"></div>
           </div>
         </div>
       </body>
@@ -287,7 +302,7 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
     bg = safe_bg_style(
         image_data=image_data,
         overlay_top="rgba(0,0,0,.07)",
-        overlay_bottom="rgba(0,0,0,.64)",
+        overlay_bottom="rgba(0,0,0,.62)",
         fallback_a="#1f221d",
         fallback_b="#0f100c",
     )
@@ -311,8 +326,8 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             inset: 0;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.12) 0%,
-              rgba(0,0,0,0) 34%
+              rgba(0,0,0,.10) 0%,
+              rgba(0,0,0,0) 36%
             );
             z-index: 1;
             pointer-events: none;
@@ -321,23 +336,23 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
           .dep .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 116px;
-            bottom: 188px;
+            right: 96px;
+            bottom: 186px;
             z-index: 5;
           }}
 
           .dep .title {{
-            font-size: 64px;
-            max-width: 805px;
+            font-size: 68px;
+            max-width: 860px;
             text-shadow: 0 2px 7px rgba(0,0,0,.16);
           }}
 
           .dep .brand-logo {{
-            width: 198px;
+            width: 232px;
           }}
 
-          .dep .accent-bar {{
-            width: 178px;
+          .dep .accent-bar-center {{
+            width: 160px;
             height: 8px;
             background: #c96d2b;
           }}
@@ -345,12 +360,12 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
       </head>
       <body>
         <div class="canvas dep">
-          <div class="section">{section_label}</div>
+          <div class="section-chip">{section_label}</div>
           <div class="title-wrap">
             <h1 class="title">{title}</h1>
           </div>
-          <div class="brand-wrap">{logo_html(logo_data)}</div>
-          <div class="accent-bar"></div>
+          <div class="brand-wrap-center">{logo_html(logo_data)}</div>
+          <div class="accent-bar-center"></div>
         </div>
       </body>
     </html>
@@ -361,7 +376,7 @@ def build_policiales(title, description, image_data, section_label, logo_data) -
     bg = safe_bg_style(
         image_data=image_data,
         overlay_top="rgba(0,0,0,.12)",
-        overlay_bottom="rgba(0,0,0,.76)",
+        overlay_bottom="rgba(0,0,0,.74)",
         fallback_a="#171717",
         fallback_b="#090909",
     )
@@ -385,8 +400,8 @@ def build_policiales(title, description, image_data, section_label, logo_data) -
             inset: 0;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.10) 0%,
-              rgba(0,0,0,0) 34%
+              rgba(0,0,0,.08) 0%,
+              rgba(0,0,0,0) 36%
             );
             z-index: 1;
             pointer-events: none;
@@ -395,23 +410,23 @@ def build_policiales(title, description, image_data, section_label, logo_data) -
           .pol .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 122px;
-            bottom: 188px;
+            right: 100px;
+            bottom: 186px;
             z-index: 5;
           }}
 
           .pol .title {{
-            font-size: 60px;
-            max-width: 790px;
+            font-size: 62px;
+            max-width: 840px;
             text-shadow: 0 2px 7px rgba(0,0,0,.18);
           }}
 
           .pol .brand-logo {{
-            width: 198px;
+            width: 232px;
           }}
 
-          .pol .accent-bar {{
-            width: 160px;
+          .pol .accent-bar-center {{
+            width: 145px;
             height: 6px;
             background: #ffffff;
             opacity: .95;
@@ -420,13 +435,13 @@ def build_policiales(title, description, image_data, section_label, logo_data) -
       </head>
       <body>
         <div class="canvas pol">
-          <div class="section">{section_label}</div>
+          <div class="section-chip">{section_label}</div>
           <div class="title-wrap">
             <h1 class="title">{title}</h1>
           </div>
-          <div class="brand-wrap">{logo_html(logo_data)}</div>
-          <div class="accent-bar"></div>
+          <div class="brand-wrap-center">{logo_html(logo_data)}</div>
+          <div class="accent-bar-center"></div>
         </div>
       </body>
     </html>
-    """
+    ```
