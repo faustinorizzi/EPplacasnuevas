@@ -1,251 +1,10 @@
 import streamlit as st
-import requests
-from bs4 import BeautifulSoup
-from urllib.parse import urlparse
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 import tempfile
 import os
-import base64
-import json
 
-from rules_v2 import infer_section_from_url, choose_family, display_section_label
-from render_v2 import build_post_html
-
-
-st.set_page_config(page_title="El Periódico - Placas V2", layout="wide")
-
-
-def file_to_base64(path: str) -> str:
-    p = Path(path)
-    if not p.exists():
-        return ""
-    mime = "image/png"
-    if p.suffix.lower() in [".jpg", ".jpeg"]:
-        mime = "image/jpeg"
-    elif p.suffix.lower() == ".webp":
-        mime = "image/webp"
-    encoded = base64.b64encode(p.read_bytes()).decode("utf-8")
-    return f"data:{mime};base64,{encoded}"
-
-
-def url_to_base64(url: str) -> str:
-    if not url:
-        return ""
-    headers = {"User-Agent": "Mozilla/5.0"}
-    resp = requests.get(url, headers=headers, timeout=25)
-    resp.raise_for_status()
-
-    content_type = resp.headers.get("Content-Type", "").lower()
-    if "jpeg" in content_type or "jpg" in content_type:
-        mime = "image/jpeg"
-    elif "png" in content_type:
-        mime = "image/png"
-    elif "webp" in content_type:
-        mime = "image/webp"
-    else:
-        mime = "image/jpeg"
-
-    encoded = base64.b64encode(resp.content).decode("utf-8")
-    return f"data:{mime};base64,{encoded}"
-
-
-def get_meta(soup: BeautifulSoup, prop=None, name=None) -> str:
-    if prop:
-        tag = soup.find("meta", attrs={"property": prop})
-        if tag and tag.get("content"):
-            return tag["content"].strip()
-    if name:
-        tag = soup.find("meta", attrs={"name": name})
-        if tag and tag.get("content"):
-            return tag["content"].strip()
-    return ""
-
-
-def parse_srcset_best(srcset: str) -> str:
-    if not srcset:
-        return ""
-    candidates = []
-    for part in srcset.split(","):
-        item = part.strip()
-        if not item:
-            continue
-        pieces = item.split()
-        url = pieces[0].strip()
-        width = 0
-        if len(pieces) > 1 and pieces[1].endswith("w"):
-            try:
-                width = int(pieces[1][:-1])
-            except Exception:
-                width = 0
-        candidates.append((width, url))
-    if not candidates:
-        return ""
-    candidates.sort(key=lambda x: x[0], reverse=True)
-    return candidates[0][1]
-
-
-def extract_newsarticle_jsonld(soup: BeautifulSoup) -> dict:
-    scripts = soup.find_all("script", attrs={"type": "application/ld+json"})
-    for script in scripts:
-        raw = script.string or script.get_text(strip=True)
-        if not raw:
-            continue
-        try:
-            data = json.loads(raw)
-        except Exception:
-            continue
-
-        objects = data if isinstance(data, list) else [data]
-
-        for obj in objects:
-            if not isinstance(obj, dict):
-                continue
-            if obj.get("@type") == "NewsArticle":
-                return obj
-    return {}
-
-
-def extract_image_from_jsonld(news_obj: dict) -> str:
-    if not news_obj:
-        return ""
-
-    image = news_obj.get("image")
-
-    if isinstance(image, list):
-        for item in image:
-            if isinstance(item, dict) and item.get("url"):
-                return item["url"]
-            if isinstance(item, str):
-                return item
-
-    if isinstance(image, dict) and image.get("url"):
-        return image["url"]
-
-    meop = news_obj.get("mainEntityOfPage")
-    if isinstance(meop, dict):
-        primary = meop.get("primaryImageOfPage")
-        if isinstance(primary, list):
-            for item in primary:
-                if isinstance(item, dict) and item.get("url"):
-                    return item["url"]
-        elif isinstance(primary, dict) and primary.get("url"):
-            return primary["url"]
-
-    return ""
-
-
-def extract_main_figure_image(soup: BeautifulSoup) -> str:
-    figure = soup.select_one('figure.multimedia[data-type="photo"]')
-    if not figure:
-        return ""
-
-    # Prefer JPEG source from main article figure
-    jpeg_source = figure.select_one('picture source[type="image/jpeg"]')
-    if jpeg_source and jpeg_source.get("srcset"):
-        best = parse_srcset_best(jpeg_source["srcset"])
-        if best:
-            return best
-
-    # Then any source srcset
-    any_source = figure.select_one("picture source[srcset]")
-    if any_source:
-        best = parse_srcset_best(any_source.get("srcset", ""))
-        if best:
-            return best
-
-    # Then img src
-    img = figure.select_one("picture img")
-    if img:
-        for attr in ["src", "data-src", "lazy-src"]:
-            if img.get(attr):
-                return img.get(attr).strip()
-        if img.get("srcset"):
-            best = parse_srcset_best(img["srcset"])
-            if best:
-                return best
-
-    return ""
-
-
-def extract_section_label_from_html(soup: BeautifulSoup, url: str) -> str:
-    section = get_meta(soup, prop="article:section")
-    if section:
-        return section.strip().upper()
-
-    return display_section_label(url)
-
-
-def extract_logo_url(soup: BeautifulSoup) -> str:
-    # First try local logo file later. This is only remote fallback.
-    nav_logo = soup.select_one('nav .center-bar picture img.logo')
-    if nav_logo and nav_logo.get("src"):
-        return nav_logo["src"].strip()
-
-    news_obj = extract_newsarticle_jsonld(soup)
-    publisher = news_obj.get("publisher", {}) if isinstance(news_obj, dict) else {}
-    if isinstance(publisher, dict) and publisher.get("logo"):
-        return publisher["logo"]
-
-    return ""
-
-
-def fetch_article_data(url: str) -> dict:
-    headers = {"User-Agent": "Mozilla/5.0"}
-    resp = requests.get(url, headers=headers, timeout=25)
-    resp.raise_for_status()
-
-    soup = BeautifulSoup(resp.text, "html.parser")
-
-    title = get_meta(soup, prop="og:title") or get_meta(soup, name="title")
-    description = get_meta(soup, prop="og:description") or get_meta(soup, name="description")
-
-    if not title:
-        h1 = soup.find("h1")
-        title = h1.get_text(" ", strip=True) if h1 else "Sin título"
-
-    news_obj = extract_newsarticle_jsonld(soup)
-
-    # NEW PRIORITY:
-    # 1) main article figure
-    # 2) JSON-LD NewsArticle image
-    # 3) og:image
-    image_url = (
-        extract_main_figure_image(soup)
-        or extract_image_from_jsonld(news_obj)
-        or get_meta(soup, prop="og:image")
-    )
-
-    raw_section = infer_section_from_url(url)
-    section_label = extract_section_label_from_html(soup, url)
-
-    image_data = ""
-    if image_url:
-        try:
-            image_data = url_to_base64(image_url)
-        except Exception:
-            image_data = ""
-
-    logo_data = file_to_base64("logo.png")
-    if not logo_data:
-        remote_logo = extract_logo_url(soup)
-        if remote_logo:
-            try:
-                logo_data = url_to_base64(remote_logo)
-            except Exception:
-                logo_data = ""
-
-    return {
-        "url": url,
-        "title": title,
-        "description": description,
-        "image_url": image_url,
-        "image_data": image_data,
-        "section": raw_section,
-        "section_label": section_label,
-        "logo_data": logo_data,
-    }
-
+st.set_page_config(page_title="CONTROL TEST V3", layout="wide")
 
 def html_to_png_bytes(html: str, width: int = 1080, height: int = 1350) -> bytes:
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -279,7 +38,6 @@ def html_to_png_bytes(html: str, width: int = 1080, height: int = 1350) -> bytes
                 viewport={"width": width, "height": height},
                 device_scale_factor=1
             )
-
             page.goto(html_path.as_uri(), wait_until="load")
             page.screenshot(path=str(img_path), full_page=True)
             browser.close()
@@ -287,66 +45,79 @@ def html_to_png_bytes(html: str, width: int = 1080, height: int = 1350) -> bytes
         return img_path.read_bytes()
 
 
-st.title("El Periódico · Placas V2")
-st.caption("Laboratorio de diseño separado del sistema productivo")
+st.title("CONTROL TEST V3")
+st.caption("Si esto no cambia visualmente, no estás viendo esta app/archivo")
 
-with st.form("url_form"):
-    url = st.text_input(
-        "Pegá la URL de una nota",
-        placeholder="https://el-periodico.com.ar/local/..."
-    )
-    submitted = st.form_submit_button("Generar preview")
+html = """
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+    background: #111;
+    font-family: Arial, sans-serif;
+  }
+  .canvas {
+    width: 1080px;
+    height: 1350px;
+    background: linear-gradient(180deg, #ff0033 0%, #111111 100%);
+    color: white;
+    position: relative;
+  }
+  .badge {
+    position: absolute;
+    top: 60px;
+    left: 60px;
+    background: yellow;
+    color: black;
+    font-weight: bold;
+    padding: 14px 22px;
+    font-size: 36px;
+    border-radius: 16px;
+  }
+  .title {
+    position: absolute;
+    left: 60px;
+    right: 60px;
+    top: 260px;
+    font-size: 64px;
+    line-height: 1.1;
+    font-weight: 900;
+  }
+  .footer {
+    position: absolute;
+    left: 60px;
+    bottom: 80px;
+    font-size: 42px;
+    font-weight: bold;
+    color: #00ff88;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="badge">CONTROL TEST V3</div>
+    <div class="title">
+      ESTA PLACA DEBE VERSE TOTALMENTE DISTINTA.<br><br>
+      FONDO ROJO, ETIQUETA AMARILLA Y ESTE TEXTO.
+    </div>
+    <div class="footer">SI VES LA PLACA ANTERIOR, ESTA APP NO ES LA CORRECTA</div>
+  </div>
+</body>
+</html>
+"""
 
-if submitted:
-    if not url.strip():
-        st.error("Pegá una URL primero.")
-        st.stop()
+png_bytes = html_to_png_bytes(html)
 
-    try:
-        article = fetch_article_data(url.strip())
-
-        family = choose_family(
-            section=article["section"],
-            title=article["title"],
-            description=article["description"],
-        )
-
-        html = build_post_html(
-            title=article["title"],
-            description=article["description"],
-            image_data=article["image_data"],
-            section_label=article["section_label"],
-            family=family,
-            logo_data=article["logo_data"],
-        )
-
-        png_bytes = html_to_png_bytes(html)
-
-        col1, col2 = st.columns([1.1, 0.9])
-
-        with col1:
-            st.subheader("Preview")
-            st.image(png_bytes, use_container_width=True)
-
-        with col2:
-            st.subheader("Datos detectados")
-            st.write(f"**Sección visible:** {article['section_label']}")
-            st.write(f"**Familia asignada:** {family}")
-            st.write(f"**Título:** {article['title']}")
-            st.write(f"**Descripción:** {article['description'] or '—'}")
-            st.write(f"**URL de imagen usada:** {article['image_url'] or '—'}")
-            st.write(f"**Imagen embebida:** {'Sí' if article['image_data'] else 'No'}")
-            st.write(f"**Logo embebido:** {'Sí' if article['logo_data'] else 'No'}")
-
-            st.download_button(
-                "Descargar PNG",
-                data=png_bytes,
-                file_name="placa_v2.png",
-                mime="image/png",
-            )
-
-            with st.expander("Ver HTML generado"):
-                st.code(html, language="html")
-
-    except Exception as e:
-        st.error(f"Error al generar la placa: {e}")
+st.image(png_bytes, use_container_width=True)
+st.download_button(
+    "Descargar PNG de prueba",
+    data=png_bytes,
+    file_name="control_test_v3.png",
+    mime="image/png",
+)
