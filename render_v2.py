@@ -1,4 +1,4 @@
-RENDER_VERSION = "GA-V2-CLEAN-01"
+RENDER_VERSION = "GA-V2-CLEAN-02"
 
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
@@ -63,6 +63,7 @@ def global_styles() -> str:
 
       .title {
         font-family: 'Passion One', sans-serif;
+        font-weight: 400;
         line-height: 1.08;
         letter-spacing: 0;
         margin: 0;
@@ -73,7 +74,7 @@ def global_styles() -> str:
         font-size: 27px;
         line-height: 1.32;
         font-weight: 600;
-        max-width: 860px;
+        max-width: 820px;
       }
 
       .brand-wrap {
@@ -81,11 +82,13 @@ def global_styles() -> str:
         left: 56px;
         bottom: 42px;
         z-index: 7;
+        display: inline-flex;
+        align-items: center;
       }
 
       .brand-logo {
         display: block;
-        width: 205px;
+        width: 198px;
         height: auto;
       }
 
@@ -103,8 +106,8 @@ def global_styles() -> str:
 def build_general_a(title, description, image_data, section_label, logo_data) -> str:
     bg = safe_bg_style(
         image_data=image_data,
-        overlay_top="rgba(0,0,0,.08)",
-        overlay_bottom="rgba(0,0,0,.64)",
+        overlay_top="rgba(0,0,0,.07)",
+        overlay_bottom="rgba(0,0,0,.62)",
         fallback_a="#1a1f1b",
         fallback_b="#0f120f",
     )
@@ -128,8 +131,8 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
             inset: 0;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.14) 0%,
-              rgba(0,0,0,0) 32%
+              rgba(0,0,0,.12) 0%,
+              rgba(0,0,0,0) 34%
             );
             z-index: 1;
             pointer-events: none;
@@ -137,29 +140,29 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
 
           .ga .section {{
             color: #fff;
-            text-shadow: 0 1px 2px rgba(0,0,0,.20);
+            text-shadow: 0 1px 2px rgba(0,0,0,.18);
           }}
 
           .ga .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 88px;
-            bottom: 178px;
+            right: 122px;
+            bottom: 188px;
             z-index: 5;
           }}
 
           .ga .title {{
-            font-size: 66px;
-            max-width: 860px;
-            text-shadow: 0 2px 8px rgba(0,0,0,.18);
+            font-size: 62px;
+            max-width: 790px;
+            text-shadow: 0 2px 7px rgba(0,0,0,.16);
           }}
 
           .ga .brand-logo {{
-            width: 205px;
+            width: 198px;
           }}
 
           .ga .accent-bar {{
-            width: 170px;
+            width: 165px;
             height: 7px;
             background: #1f8b4c;
           }}
@@ -209,12 +212,12 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(rgba(0,0,0,.06), rgba(0,0,0,.18));
+            background: linear-gradient(rgba(0,0,0,.05), rgba(0,0,0,.16));
           }}
 
           .gb .section {{
             color: #fff;
-            text-shadow: 0 1px 2px rgba(0,0,0,.22);
+            text-shadow: 0 1px 2px rgba(0,0,0,.20);
           }}
 
           .gb .panel {{
@@ -229,7 +232,7 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
 
           .gb .bar {{
             width: 12px;
-            height: 110px;
+            height: 104px;
             background: #1f8b4c;
             position: absolute;
             left: 56px;
@@ -238,26 +241,27 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
           }}
 
           .gb .inner {{
-            margin-left: 34px;
+            margin-left: 32px;
           }}
 
           .gb .title {{
-            font-size: 58px;
+            font-size: 55px;
+            font-weight: 400;
             color: #111;
-            max-width: 870px;
-            line-height: 1.08;
+            max-width: 820px;
+            line-height: 1.09;
           }}
 
           .gb .desc {{
             color: #3a3a3a;
-            font-size: 24px;
+            font-size: 23px;
             line-height: 1.34;
-            max-width: 840px;
+            max-width: 790px;
             margin-top: 18px;
           }}
 
           .gb .brand-logo {{
-            width: 205px;
+            width: 198px;
           }}
         </style>
       </head>
@@ -282,8 +286,8 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
 def build_deportes(title, description, image_data, section_label, logo_data) -> str:
     bg = safe_bg_style(
         image_data=image_data,
-        overlay_top="rgba(0,0,0,.08)",
-        overlay_bottom="rgba(0,0,0,.66)",
+        overlay_top="rgba(0,0,0,.07)",
+        overlay_bottom="rgba(0,0,0,.64)",
         fallback_a="#1f221d",
         fallback_b="#0f100c",
     )
@@ -307,8 +311,8 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             inset: 0;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.14) 0%,
-              rgba(0,0,0,0) 32%
+              rgba(0,0,0,.12) 0%,
+              rgba(0,0,0,0) 34%
             );
             z-index: 1;
             pointer-events: none;
@@ -317,23 +321,23 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
           .dep .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 88px;
-            bottom: 178px;
+            right: 116px;
+            bottom: 188px;
             z-index: 5;
           }}
 
           .dep .title {{
-            font-size: 68px;
-            max-width: 860px;
-            text-shadow: 0 2px 8px rgba(0,0,0,.18);
+            font-size: 64px;
+            max-width: 805px;
+            text-shadow: 0 2px 7px rgba(0,0,0,.16);
           }}
 
           .dep .brand-logo {{
-            width: 205px;
+            width: 198px;
           }}
 
           .dep .accent-bar {{
-            width: 185px;
+            width: 178px;
             height: 8px;
             background: #c96d2b;
           }}
@@ -356,8 +360,8 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
 def build_policiales(title, description, image_data, section_label, logo_data) -> str:
     bg = safe_bg_style(
         image_data=image_data,
-        overlay_top="rgba(0,0,0,.14)",
-        overlay_bottom="rgba(0,0,0,.78)",
+        overlay_top="rgba(0,0,0,.12)",
+        overlay_bottom="rgba(0,0,0,.76)",
         fallback_a="#171717",
         fallback_b="#090909",
     )
@@ -381,8 +385,8 @@ def build_policiales(title, description, image_data, section_label, logo_data) -
             inset: 0;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.12) 0%,
-              rgba(0,0,0,0) 32%
+              rgba(0,0,0,.10) 0%,
+              rgba(0,0,0,0) 34%
             );
             z-index: 1;
             pointer-events: none;
@@ -391,23 +395,23 @@ def build_policiales(title, description, image_data, section_label, logo_data) -
           .pol .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 88px;
-            bottom: 178px;
+            right: 122px;
+            bottom: 188px;
             z-index: 5;
           }}
 
           .pol .title {{
-            font-size: 64px;
-            max-width: 860px;
-            text-shadow: 0 2px 8px rgba(0,0,0,.20);
+            font-size: 60px;
+            max-width: 790px;
+            text-shadow: 0 2px 7px rgba(0,0,0,.18);
           }}
 
           .pol .brand-logo {{
-            width: 205px;
+            width: 198px;
           }}
 
           .pol .accent-bar {{
-            width: 165px;
+            width: 160px;
             height: 6px;
             background: #ffffff;
             opacity: .95;
