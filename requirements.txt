@@ -1,0 +1,6 @@
+streamlit
+feedparser
+playwright
+beautifulsoup4
+requests
+nest_asyncio
