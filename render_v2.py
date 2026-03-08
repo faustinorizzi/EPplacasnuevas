@@ -12,17 +12,17 @@ def logo_html(logo_data: str) -> str:
     return f'<img src="{logo_data}" alt="El Periódico" class="brand-logo" />'
 
 
-def build_post_html(title: str, description: str, image_data: str, section_label: str, family: str, logo_data: str) -> str:
-    title = (title or "").strip()
+def build_post_html(title: str, description: str, image_data: str, section_label: str, family: str, logo_white_data: str, logo_green_data: str) -> str:
+        title = (title or "").strip()
     description = (description or "").strip()
 
     if family == "general_b":
-        return build_general_b(title, description, image_data, section_label, logo_data)
+        return build_general_b(title, description, image_data, section_label, logo_green_data)
     if family == "deportes":
-        return build_deportes(title, description, image_data, section_label, logo_data)
+        return build_deportes(title, description, image_data, section_label, logo_white_data)
     if family == "policiales":
-        return build_policiales(title, description, image_data, section_label, logo_data)
-    return build_general_a(title, description, image_data, section_label, logo_data)
+        return build_policiales(title, description, image_data, section_label, logo_white_data)
+    return build_general_a(title, description, image_data, section_label, logo_white_data)
 
 
 def global_styles() -> str:
