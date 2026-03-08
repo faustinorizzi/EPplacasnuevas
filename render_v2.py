@@ -1,4 +1,4 @@
-RENDER_VERSION = "GA-V2-CLEAN-03"
+RENDER_VERSION = "GA-V2-CLEAN-04"
 
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
@@ -29,7 +29,7 @@ def build_post_html(title: str, description: str, image_data: str, section_label
 def global_styles() -> str:
     return """
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&family=Inter:wght@400;600;700;800&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&family=PT+Sans:wght@400;700&display=swap');
 
       * { box-sizing: border-box; }
 
@@ -47,21 +47,21 @@ def global_styles() -> str:
         height: 1350px;
         position: relative;
         overflow: hidden;
-        font-family: 'Inter', sans-serif;
+        font-family: 'PT Sans', sans-serif;
       }
 
       .section-chip {
         position: absolute;
         top: 48px;
         left: 56px;
-        padding: 12px 20px;
+        padding: 10px 18px;
         border-radius: 999px;
-        background: rgba(255,255,255,.10);
-        border: 1px solid rgba(255,255,255,.18);
+        background: rgba(31, 139, 76, .24);
+        border: 1px solid rgba(66, 171, 108, .42);
         color: #fff;
-        font-size: 20px;
-        font-weight: 800;
-        letter-spacing: .05em;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: .04em;
         text-transform: uppercase;
         z-index: 6;
         backdrop-filter: blur(4px);
@@ -79,7 +79,7 @@ def global_styles() -> str:
         margin: 18px 0 0 0;
         font-size: 27px;
         line-height: 1.32;
-        font-weight: 600;
+        font-weight: 700;
         max-width: 820px;
       }
 
@@ -87,7 +87,7 @@ def global_styles() -> str:
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        bottom: 42px;
+        bottom: 50px;
         z-index: 7;
         display: inline-flex;
         align-items: center;
@@ -104,7 +104,7 @@ def global_styles() -> str:
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        bottom: 22px;
+        bottom: 28px;
         z-index: 7;
         border-radius: 2px;
       }
@@ -116,7 +116,7 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
     bg = safe_bg_style(
         image_data=image_data,
         overlay_top="rgba(0,0,0,.07)",
-        overlay_bottom="rgba(0,0,0,.60)",
+        overlay_bottom="rgba(0,0,0,.58)",
         fallback_a="#1a1f1b",
         fallback_b="#0f120f",
     )
@@ -140,8 +140,8 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
             inset: 0;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.10) 0%,
-              rgba(0,0,0,0) 36%
+              rgba(0,0,0,.08) 0%,
+              rgba(0,0,0,0) 38%
             );
             z-index: 1;
             pointer-events: none;
@@ -150,23 +150,23 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
           .ga .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 96px;
-            bottom: 186px;
+            right: 108px;
+            bottom: 196px;
             z-index: 5;
           }}
 
           .ga .title {{
-            font-size: 66px;
-            max-width: 860px;
+            font-size: 68px;
+            max-width: 840px;
             text-shadow: 0 2px 7px rgba(0,0,0,.16);
           }}
 
           .ga .brand-logo {{
-            width: 232px;
+            width: 228px;
           }}
 
           .ga .accent-bar-center {{
-            width: 150px;
+            width: 148px;
             height: 7px;
             background: #1f8b4c;
           }}
@@ -220,8 +220,8 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
           }}
 
           .gb .section-chip {{
-            background: rgba(255,255,255,.14);
-            border: 1px solid rgba(255,255,255,.20);
+            background: rgba(31, 139, 76, .28);
+            border: 1px solid rgba(66, 171, 108, .44);
           }}
 
           .gb .panel {{
@@ -265,15 +265,15 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
           }}
 
           .gb .brand-wrap-center {{
-            bottom: 34px;
+            bottom: 40px;
           }}
 
           .gb .brand-logo {{
-            width: 232px;
+            width: 228px;
           }}
 
           .gb .accent-bar-center {{
-            width: 150px;
+            width: 148px;
             height: 7px;
             background: #1f8b4c;
           }}
@@ -326,8 +326,8 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             inset: 0;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.10) 0%,
-              rgba(0,0,0,0) 36%
+              rgba(0,0,0,.08) 0%,
+              rgba(0,0,0,0) 38%
             );
             z-index: 1;
             pointer-events: none;
@@ -336,23 +336,23 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
           .dep .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 96px;
-            bottom: 186px;
+            right: 108px;
+            bottom: 196px;
             z-index: 5;
           }}
 
           .dep .title {{
-            font-size: 68px;
-            max-width: 860px;
+            font-size: 70px;
+            max-width: 840px;
             text-shadow: 0 2px 7px rgba(0,0,0,.16);
           }}
 
           .dep .brand-logo {{
-            width: 232px;
+            width: 228px;
           }}
 
           .dep .accent-bar-center {{
-            width: 160px;
+            width: 156px;
             height: 8px;
             background: #c96d2b;
           }}
@@ -401,7 +401,7 @@ def build_policiales(title, description, image_data, section_label, logo_data) -
             background: linear-gradient(
               to top,
               rgba(0,0,0,.08) 0%,
-              rgba(0,0,0,0) 36%
+              rgba(0,0,0,0) 38%
             );
             z-index: 1;
             pointer-events: none;
@@ -410,23 +410,23 @@ def build_policiales(title, description, image_data, section_label, logo_data) -
           .pol .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 100px;
-            bottom: 186px;
+            right: 112px;
+            bottom: 196px;
             z-index: 5;
           }}
 
           .pol .title {{
-            font-size: 62px;
-            max-width: 840px;
+            font-size: 64px;
+            max-width: 820px;
             text-shadow: 0 2px 7px rgba(0,0,0,.18);
           }}
 
           .pol .brand-logo {{
-            width: 232px;
+            width: 228px;
           }}
 
           .pol .accent-bar-center {{
-            width: 145px;
+            width: 142px;
             height: 6px;
             background: #ffffff;
             opacity: .95;
