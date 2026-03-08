@@ -165,11 +165,11 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
             width: 228px;
           }}
 
-          .ga .accent-bar-center {
+          .ga .accent-bar-center {{
     width: 170px;
     height: 9px;
     background: #2aa357;
-}
+}}
         </style>
       </head>
       <body>
