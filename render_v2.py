@@ -1,6 +1,6 @@
 import base64
 
-RENDER_VERSION = "GA-V2-INNOVATOR-FULLGEMINI"
+RENDER_VERSION = "EL-PERIODICO-INNOVATOR-V4"
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
     if image_data:
@@ -67,21 +67,23 @@ def build_post_html(
     title = (title or "").strip()
     description = (description or "").strip()
 
-    # Ruteo de Familias
+    # Ruteo unificado para asegurar que Deportes B siempre use el resaltado
+    if family == "deportes_b" or family == "deportes":
+        return build_deportes_b(title, description, image_data, section_label, logo_green_data)
+    
     if family == "deportes_a":
         return build_deportes_a(title, description, image_data, section_label, logo_green_data)
-    if family == "deportes_b":
-        return build_deportes_b(title, description, image_data, section_label, logo_green_data)
+        
     if family == "general_b":
         return build_general_b(title, description, image_data, section_label, logo_green_data)
+        
     if family == "policiales":
         return build_policiales(title, description, image_data, section_label, logo_white_data)
     
-    # Default: General A
     return build_general_a(title, description, image_data, section_label, logo_green_data)
 
 def build_deportes_a(title, description, image_data, section_label, logo_data):
-    """VARIANTE A: Impacto. Diagonal y fondo oscuro con Passion One."""
+    """VARIANTE A: Impacto con Diagonal."""
     bg = safe_bg_style(image_data, "rgba(0,0,0,0.2)", "rgba(0,0,0,0.6)", "#1a3b2a", "#1a3b2a")
     return f"""
     <html>
@@ -108,18 +110,19 @@ def build_deportes_a(title, description, image_data, section_label, logo_data):
     """
 
 def build_deportes_b(title, description, image_data, section_label, logo_data):
-    """VARIANTE B: Servicio. Panel inferior con resaltado sólido (Estilo La Voz)."""
+    """VARIANTE B: Servicio con Resaltado Sólido tipo Marcador."""
     photo_style = f"background-image: url('{image_data}');" if image_data else ""
     
-    # Lógica de resaltado
-    title_html = title
+    # Lógica de resaltado forzada para que se vea el bloque naranja
     if ":" in title:
         left, right = title.split(":", 1)
-        title_html = f'<span class="highlight">{left.strip()}:</span> {right.strip()}'
+        title_html = f'<span class="marcador-naranja">{left.strip()}:</span> {right.strip()}'
     else:
         words = title.split()
-        if len(words) >= 4:
-            title_html = f'<span class="highlight">{" ".join(words[:3])}</span> {" ".join(words[3:])}'
+        if len(words) >= 3:
+            title_html = f'<span class="marcador-naranja">{" ".join(words[:3])}</span> {" ".join(words[3:])}'
+        else:
+            title_html = f'<span class="marcador-naranja">{title}</span>'
 
     return f"""
     <html>
@@ -130,8 +133,18 @@ def build_deportes_b(title, description, image_data, section_label, logo_data):
           .panel {{ position: absolute; bottom: 0; left: 0; right: 0; height: 520px; background: #efede8; padding: 60px 56px; }}
           .bar {{ position: absolute; left: 56px; top: 60px; width: 14px; height: 160px; background: #f37021; }}
           .inner {{ margin-left: 40px; }}
-          .title {{ font-size: 75px; color: #111; line-height: 1.2; text-transform: uppercase; }}
-          .highlight {{ background: #f37021; color: #fff; padding: 4px 15px; box-decoration-break: clone; -webkit-box-decoration-break: clone; display: inline; }}
+          .title {{ font-size: 75px; color: #111; line-height: 1.25; text-transform: uppercase; }}
+          
+          /* ESTILO MARCADOR SÓLIDO */
+          .marcador-naranja {{ 
+            background: #f37021 !important; 
+            color: #fff !important; 
+            padding: 5px 15px; 
+            display: inline; 
+            box-decoration-break: clone; 
+            -webkit-box-decoration-break: clone;
+          }}
+          
           .brand-logo {{ bottom: 40px; right: 56px; width: 220px; }}
         </style>
       </head>
@@ -149,7 +162,7 @@ def build_deportes_b(title, description, image_data, section_label, logo_data):
     """
 
 def build_general_a(title, description, image_data, section_label, logo_data):
-    """GENERAL A: Líder. Passion One sobre fondo oscuro."""
+    """GENERAL A: Líder."""
     bg = safe_bg_style(image_data, "rgba(0,0,0,0.1)", "rgba(0,0,0,0.8)", "#2d572c", "#1a331b")
     return f"""
     <html>
@@ -171,7 +184,7 @@ def build_general_a(title, description, image_data, section_label, logo_data):
     """
 
 def build_general_b(title, description, image_data, section_label, logo_data):
-    """GENERAL B: Cercanía. Barlow para un look más humano y limpio."""
+    """GENERAL B: Cercanía."""
     return f"""
     <html>
       <head><meta charset="utf-8">{global_styles()}
@@ -195,7 +208,7 @@ def build_general_b(title, description, image_data, section_label, logo_data):
     """
 
 def build_policiales(title, description, image_data, section_label, logo_data):
-    """POLICIALES: Impacto y seriedad."""
+    """POLICIALES: Seriedad."""
     bg = safe_bg_style(image_data, "rgba(0,0,0,0.4)", "rgba(0,0,0,0.9)", "#000", "#222")
     return f"""
     <html>
