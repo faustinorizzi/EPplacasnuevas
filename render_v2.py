@@ -118,7 +118,7 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
     raw_title = (title or "").strip()
     title_html = raw_title
 
-    # Lógica de detección para el resaltado
+    # Lógica de detección para el resaltado (Divergente/Innovadora)
     if ":" in raw_title:
         left, right = raw_title.split(":", 1)
         if left.strip():
@@ -126,7 +126,6 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
     else:
         words = raw_title.split()
         if len(words) >= 4:
-            # Resalta las primeras 3 palabras si no hay ":"
             title_html = f'<span class="title-highlight">{" ".join(words[:3])}</span> {" ".join(words[3:])}'
 
     return f"""
@@ -163,7 +162,7 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             left: 0;
             right: 0;
             bottom: 0;
-            height: 480px; /* Un poco más alto para dar aire al bloque */
+            height: 480px;
             background: #efede8;
             padding: 40px 56px;
           }}
@@ -174,7 +173,7 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             top: 40px;
             width: 14px;
             height: 140px;
-            background: #f37021; /* Naranja disruptivo de El Periódico */
+            background: #f37021;
             border-radius: 2px;
           }}
 
@@ -187,13 +186,13 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             font-weight: 400;
             color: #111;
             max-width: 880px;
-            line-height: 1.2; /* Ajustado para que el highlight no se encime */
+            line-height: 1.25;
           }}
 
-          /* EL RESALTADO TIPO MARCADOR */
+          /* RESALTADO TIPO MARCADOR (Estilo La Voz / Innovador) */
           .depb .title-highlight {{
-            background-color: #f37021; /* Fondo naranja sólido */
-            color: #ffffff;            /* Texto blanco sobre el fondo */
+            background-color: #f37021; 
+            color: #ffffff;            
             padding: 4px 15px;
             box-decoration-break: clone;
             -webkit-box-decoration-break: clone;
