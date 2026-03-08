@@ -4,7 +4,7 @@ def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallba
     if image_data:
         return f"background-image: linear-gradient({overlay_top}, {overlay_bottom}), url('{image_data}');"
     return f"background: linear-gradient(135deg, {fallback_a} 0%, {fallback_b} 100%);"
-
+    
 
 def logo_html(logo_data: str) -> str:
     if not logo_data:
