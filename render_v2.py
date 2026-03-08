@@ -1,4 +1,4 @@
-RENDER_VERSION = "GA-V2-CLEAN-15"
+RENDER_VERSION = "GA-V2-CLEAN-16"
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
     if image_data:
@@ -301,7 +301,7 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
           <div class="panel">
             <div class="bar"></div>
             <div class="inner">
-              <div class="section-chip-inline">{section_label}</div>
+              
               <h1 class="title">{title}</h1>
               {desc_html}
             </div>
@@ -363,15 +363,15 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             left: 0;
             right: 0;
             bottom: 0;
-            height: 560px;
+            height: 470px;
             background: #efede8;
-            padding: 42px 56px 34px 56px;
+            padding: 34px 56px 24px 56px;
           }}
 
           .depb .bar {{
             position: absolute;
             left: 56px;
-            top: 42px;
+            top: 34px;
             width: 14px;
             height: 128px;
             background: #c96d2b;
@@ -397,7 +397,7 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
           }}
 
           .depb .title {{
-            font-size: 62px;
+            font-size: 64px;
             font-weight: 400;
             color: #111;
             max-width: 840px;
