@@ -1,4 +1,4 @@
-RENDER_VERSION = "GA-V2-CLEAN-10"
+RENDER_VERSION = "GA-V2-CLEAN-11"
 
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
@@ -318,8 +318,8 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
 def build_deportes(title, description, image_data, section_label, logo_data) -> str:
     bg = safe_bg_style(
         image_data=image_data,
-        overlay_top="rgba(0,0,0,.07)",
-        overlay_bottom="rgba(0,0,0,.62)",
+        overlay_top="rgba(0,0,0,.06)",
+        overlay_bottom="rgba(12,18,12,.60)",
         fallback_a="#1f221d",
         fallback_b="#0f100c",
     )
@@ -343,24 +343,30 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             inset: 0;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.08) 0%,
+              rgba(0,0,0,.07) 0%,
               rgba(0,0,0,0) 38%
             );
             z-index: 1;
             pointer-events: none;
           }}
 
+          .dep .section-chip {{
+            background: rgba(201, 109, 43, .28);
+            border: 1px solid rgba(225, 142, 80, .46);
+            color: #fff;
+          }}
+
           .dep .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 108px;
+            right: 100px;
             bottom: 196px;
             z-index: 5;
           }}
 
           .dep .title {{
-            font-size: 70px;
-            max-width: 840px;
+            font-size: 72px;
+            max-width: 860px;
             text-shadow: 0 2px 7px rgba(0,0,0,.16);
           }}
 
@@ -369,8 +375,8 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
           }}
 
           .dep .accent-bar-center {{
-            width: 156px;
-            height: 8px;
+            width: 170px;
+            height: 10px;
             background: #c96d2b;
           }}
         </style>
