@@ -1,4 +1,4 @@
-RENDER_VERSION = "GA-V2-CLEAN-08"
+RENDER_VERSION = "GA-V2-CLEAN-09"
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
     if image_data:
