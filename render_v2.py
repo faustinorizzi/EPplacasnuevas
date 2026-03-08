@@ -1,5 +1,6 @@
 RENDER_VERSION = "GA-V2-CLEAN-10"
 
+
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
     if image_data:
         return f"background-image: linear-gradient({overlay_top}, {overlay_bottom}), url('{image_data}');"
@@ -12,8 +13,16 @@ def logo_html(logo_data: str) -> str:
     return f'<img src="{logo_data}" alt="El Periódico" class="brand-logo" />'
 
 
-def build_post_html(title: str, description: str, image_data: str, section_label: str, family: str, logo_white_data: str, logo_green_data: str) -> str:
-            title = (title or "").strip()
+def build_post_html(
+    title: str,
+    description: str,
+    image_data: str,
+    section_label: str,
+    family: str,
+    logo_white_data: str,
+    logo_green_data: str,
+) -> str:
+    title = (title or "").strip()
     description = (description or "").strip()
 
     if family == "general_b":
@@ -76,10 +85,10 @@ def global_styles() -> str:
 
       .desc {
         margin: 18px 0 0 0;
-        font-size: 27px;
-        line-height: 1.32;
+        font-size: 25px;
+        line-height: 1.34;
         font-weight: 700;
-        max-width: 820px;
+        max-width: 790px;
       }
 
       .brand-wrap-center {
@@ -95,7 +104,7 @@ def global_styles() -> str:
 
       .brand-logo {
         display: block;
-        width: 230px;
+        width: 228px;
         height: auto;
       }
 
@@ -265,12 +274,12 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
           }}
 
           .gb .desc {{
-    color: #3d3d3d;
-    font-size: 25px;
-    line-height: 1.34;
-    max-width: 790px;
-    margin-top: 18px;
-}}
+            color: #3d3d3d;
+            font-size: 25px;
+            line-height: 1.34;
+            max-width: 790px;
+            margin-top: 18px;
+          }}
 
           .gb .brand-wrap-center {{
             bottom: 38px;
