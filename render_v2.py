@@ -1,10 +1,11 @@
-RENDER_VERSION = "TEST-DEP-16-OK"
+RENDER_VERSION = "GA-V2-CLEAN-16"
+
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
     if image_data:
         return f"background-image: linear-gradient({overlay_top}, {overlay_bottom}), url('{image_data}');"
     return f"background: linear-gradient(135deg, {fallback_a} 0%, {fallback_b} 100%);"
-    
+
 
 def logo_html(logo_data: str) -> str:
     if not logo_data:
@@ -27,7 +28,7 @@ def build_post_html(
     if family == "general_b":
         return build_general_b(title, description, image_data, section_label, logo_green_data)
     if family == "deportes":
-        return build_deportes(title, description, image_data, section_label, logo_white_data)
+        return build_deportes(title, description, image_data, section_label, logo_green_data)
     if family == "policiales":
         return build_policiales(title, description, image_data, section_label, logo_white_data)
     return build_general_a(title, description, image_data, section_label, logo_white_data)
@@ -301,7 +302,7 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
           <div class="panel">
             <div class="bar"></div>
             <div class="inner">
-              
+              <div class="section-chip-inline">{section_label}</div>
               <h1 class="title">{title}</h1>
               {desc_html}
             </div>
@@ -382,25 +383,11 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             margin-left: 34px;
           }}
 
-          .depb .section-chip-inline {{
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 999px;
-            background: rgba(31, 139, 76, .14);
-            border: 1px solid rgba(66, 171, 108, .34);
-            color: #1f8b4c;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: .04em;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-          }}
-
           .depb .title {{
             font-size: 64px;
             font-weight: 400;
             color: #111;
-            max-width: 840px;
+            max-width: 860px;
             line-height: 1.08;
           }}
 
@@ -429,7 +416,6 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
           <div class="panel">
             <div class="bar"></div>
             <div class="inner">
-              <div class="section-chip-inline">{section_label}</div>
               <h1 class="title">{title_html}</h1>
             </div>
             <div class="brand-wrap-center">{logo_html(logo_data)}</div>
