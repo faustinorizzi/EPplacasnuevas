@@ -316,27 +316,19 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
 
 
 def build_deportes(title, description, image_data, section_label, logo_data) -> str:
-    bg = safe_bg_style(
-        image_data=image_data,
-        overlay_top="rgba(0,0,0,.03)",
-        overlay_bottom="rgba(0,0,0,.30)",
-        fallback_a="#151815",
-        fallback_b="#0c0d0c",
-    )
+    photo_style = f"background-image: url('{image_data}');" if image_data else "background: linear-gradient(135deg, #273126 0%, #1a2119 100%);"
 
-    title_lower = (title or "").lower()
+    raw_title = (title or "").strip()
+    title_html = raw_title
 
-    sport_meta = "DEPORTES"
-    if any(x in title_lower for x in ["gp", "fórmula 1", "formula 1"]):
-        sport_meta = "FÓRMULA 1"
-    elif any(x in title_lower for x in ["liga", "clausura", "apertura"]):
-        sport_meta = "LIGA"
-    elif any(x in title_lower for x in ["básquet", "basquet"]):
-        sport_meta = "BÁSQUET"
-    elif any(x in title_lower for x in ["copa"]):
-        sport_meta = "COPA"
-    elif any(x in title_lower for x in ["clasific", "largará", "largara"]):
-        sport_meta = "CLASIFICACIÓN"
+    if ":" in raw_title:
+        left, right = raw_title.split(":", 1)
+        if left.strip():
+            title_html = f'<span class="title-highlight">{left.strip()}:</span> {right.strip()}'
+    else:
+        words = raw_title.split()
+        if len(words) >= 4:
+            title_html = f'<span class="title-highlight">{" ".join(words[:3])}</span> {" ".join(words[3:])}'
 
     return f"""
     <html>
@@ -344,99 +336,106 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
         <meta charset="utf-8">
         {global_styles()}
         <style>
-          .dep {{
-            color: #fff;
+          .depb {{
+            background: #efede8;
+            color: #111;
+          }}
+
+          .depb .photo {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1080px;
+            height: 760px;
+            {photo_style}
             background-size: cover;
             background-position: center;
-            {bg}
           }}
 
-          .dep::after {{
-            content: "";
+          .depb .photo::after {{
+            content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(
-              to top,
-              rgba(0,0,0,.18) 0%,
-              rgba(0,0,0,0) 48%
-            );
-            z-index: 1;
-            pointer-events: none;
+            background: linear-gradient(rgba(0,0,0,.03), rgba(0,0,0,.12));
           }}
 
-          .dep .bottom-panel {{
+          .depb .panel {{
             position: absolute;
             left: 0;
             right: 0;
             bottom: 0;
-            height: 340px;
-            background: linear-gradient(
-              to top,
-              rgba(8,8,8,.88) 0%,
-              rgba(8,8,8,.78) 62%,
-              rgba(8,8,8,0) 100%
-            );
-            z-index: 3;
+            height: 560px;
+            background: #efede8;
+            padding: 42px 56px 34px 56px;
           }}
 
-          .dep .title-wrap {{
+          .depb .bar {{
             position: absolute;
             left: 56px;
-            right: 80px;
-            bottom: 118px;
-            z-index: 5;
+            top: 42px;
+            width: 14px;
+            height: 128px;
+            background: #1f8b4c;
+            border-radius: 2px;
           }}
 
-          .dep .sport-meta {{
+          .depb .inner {{
+            margin-left: 34px;
+          }}
+
+          .depb .section-chip-inline {{
             display: inline-block;
-            margin-bottom: 16px;
-            padding: 8px 14px;
-            background: #1f8b4c;
-            color: #fff;
-            font-family: 'PT Sans', sans-serif;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: rgba(31, 139, 76, .14);
+            border: 1px solid rgba(66, 171, 108, .34);
+            color: #1f8b4c;
             font-size: 18px;
             font-weight: 700;
-            letter-spacing: .05em;
+            letter-spacing: .04em;
             text-transform: uppercase;
-            border-radius: 6px;
+            margin-bottom: 16px;
           }}
 
-          .dep .title {{
-            font-size: 66px;
-            max-width: 900px;
-            text-shadow: 0 2px 7px rgba(0,0,0,.20);
+          .depb .title {{
+            font-size: 58px;
+            font-weight: 400;
+            color: #111;
+            max-width: 840px;
+            line-height: 1.08;
           }}
 
-          .dep .brand-wrap-center {{
-            left: 56px;
-            transform: none;
+          .depb .title-highlight {{
+            color: #c96d2b;
+          }}
+
+          .depb .brand-wrap-center {{
             bottom: 34px;
-            justify-content: flex-start;
           }}
 
-          .dep .brand-logo {{
-            width: 190px;
+          .depb .brand-logo {{
+            width: 228px;
           }}
 
-          .dep .accent-bar-center {{
-            left: 56px;
-            transform: none;
-            bottom: 18px;
-            width: 150px;
-            height: 8px;
+          .depb .accent-bar-center {{
+            width: 138px;
+            height: 7px;
             background: #1f8b4c;
           }}
         </style>
       </head>
       <body>
-        <div class="canvas dep">
-          <div class="bottom-panel"></div>
-          <div class="title-wrap">
-            <div class="sport-meta">{sport_meta}</div>
-            <h1 class="title">{title}</h1>
+        <div class="canvas depb">
+          <div class="photo"></div>
+          <div class="panel">
+            <div class="bar"></div>
+            <div class="inner">
+              <div class="section-chip-inline">{section_label}</div>
+              <h1 class="title">{title_html}</h1>
+            </div>
+            <div class="brand-wrap-center">{logo_html(logo_data)}</div>
+            <div class="accent-bar-center"></div>
           </div>
-          <div class="brand-wrap-center">{logo_html(logo_data)}</div>
-          <div class="accent-bar-center"></div>
         </div>
       </body>
     </html>
