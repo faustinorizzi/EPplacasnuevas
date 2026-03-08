@@ -191,29 +191,29 @@ def fetch_article_data(url: str) -> dict:
     )
 
     raw_section = infer_section_from_url(url)
-    section_label = extract_section_label_from_html(soup, url)
+section_label = extract_section_label_from_html(soup, url)
 
-    image_data = ""
-    if image_url:
-        try:
-            image_data = url_to_base64(image_url)
-        except Exception:
-            image_data = ""
+image_data = ""
+if image_url:
+    try:
+        image_data = url_to_base64(image_url)
+    except Exception:
+        image_data = ""
 
-    logo_white_data = file_to_base64("logo_white.png")
+logo_white_data = file_to_base64("logo_white.png")
 logo_green_data = file_to_base64("logo.png")
 
-    return {
-        "url": url,
-        "title": title,
-        "description": description,
-        "image_url": image_url,
-        "image_data": image_data,
-        "section": raw_section,
-        "section_label": section_label,
-        "logo_white_data": logo_white_data,
-"logo_green_data": logo_green_data,
-    }
+return {
+    "url": url,
+    "title": title,
+    "description": description,
+    "image_url": image_url,
+    "image_data": image_data,
+    "section": raw_section,
+    "section_label": section_label,
+    "logo_white_data": logo_white_data,
+    "logo_green_data": logo_green_data,
+}
 
 
 def html_to_image_bytes(html: str, width: int = 1080, height: int = 1350, fmt: str = "jpeg", quality: int = 88) -> bytes:
