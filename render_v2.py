@@ -318,25 +318,25 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
 def build_deportes(title, description, image_data, section_label, logo_data) -> str:
     bg = safe_bg_style(
         image_data=image_data,
-        overlay_top="rgba(0,0,0,.05)",
-        overlay_bottom="rgba(8,14,10,.66)",
-        fallback_a="#1b1f1a",
-        fallback_b="#0d0f0d",
+        overlay_top="rgba(0,0,0,.03)",
+        overlay_bottom="rgba(0,0,0,.30)",
+        fallback_a="#151815",
+        fallback_b="#0c0d0c",
     )
 
     title_lower = (title or "").lower()
 
-    sport_meta = ""
-    if any(x in title_lower for x in ["gp", "fórmula 1", "formula 1", "largará", "clasific"]):
+    sport_meta = "DEPORTES"
+    if any(x in title_lower for x in ["gp", "fórmula 1", "formula 1"]):
+        sport_meta = "FÓRMULA 1"
+    elif any(x in title_lower for x in ["liga", "clausura", "apertura"]):
+        sport_meta = "LIGA"
+    elif any(x in title_lower for x in ["básquet", "basquet"]):
+        sport_meta = "BÁSQUET"
+    elif any(x in title_lower for x in ["copa"]):
+        sport_meta = "COPA"
+    elif any(x in title_lower for x in ["clasific", "largará", "largara"]):
         sport_meta = "CLASIFICACIÓN"
-    elif any(x in title_lower for x in ["vs", "venció", "perdió", "ganó", "triunfo", "triunfó"]):
-        sport_meta = "RESULTADO"
-    elif any(x in title_lower for x in ["fecha", "hoy", "hora", "horario", "agenda"]):
-        sport_meta = "AGENDA"
-    elif any(x in title_lower for x in ["liga", "torneo", "copa", "campeonato"]):
-        sport_meta = "COMPETENCIA"
-
-    meta_html = f'<div class="sport-meta">{sport_meta}</div>' if sport_meta else ""
 
     return f"""
     <html>
@@ -357,17 +357,11 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             inset: 0;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.10) 0%,
-              rgba(0,0,0,0) 36%
+              rgba(0,0,0,.18) 0%,
+              rgba(0,0,0,0) 48%
             );
             z-index: 1;
             pointer-events: none;
-          }}
-
-          .dep .section-chip {{
-            background: rgba(31, 139, 76, .34);
-            border: 1px solid rgba(82, 188, 88, .52);
-            color: #fff;
           }}
 
           .dep .bottom-panel {{
@@ -375,12 +369,12 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             left: 0;
             right: 0;
             bottom: 0;
-            height: 390px;
+            height: 340px;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.72) 0%,
-              rgba(0,0,0,.50) 55%,
-              rgba(0,0,0,0) 100%
+              rgba(8,8,8,.88) 0%,
+              rgba(8,8,8,.78) 62%,
+              rgba(8,8,8,0) 100%
             );
             z-index: 3;
           }}
@@ -388,48 +382,57 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
           .dep .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 92px;
-            bottom: 184px;
+            right: 80px;
+            bottom: 118px;
             z-index: 5;
           }}
 
           .dep .sport-meta {{
             display: inline-block;
-            margin-bottom: 18px;
-            padding: 8px 16px;
-            border-radius: 999px;
-            background: rgba(201, 109, 43, .92);
+            margin-bottom: 16px;
+            padding: 8px 14px;
+            background: #1f8b4c;
             color: #fff;
             font-family: 'PT Sans', sans-serif;
             font-size: 18px;
             font-weight: 700;
             letter-spacing: .05em;
             text-transform: uppercase;
+            border-radius: 6px;
           }}
 
           .dep .title {{
-            font-size: 68px;
-            max-width: 860px;
-            text-shadow: 0 2px 7px rgba(0,0,0,.18);
+            font-size: 66px;
+            max-width: 900px;
+            text-shadow: 0 2px 7px rgba(0,0,0,.20);
+          }}
+
+          .dep .brand-wrap-center {{
+            left: 56px;
+            transform: none;
+            bottom: 34px;
+            justify-content: flex-start;
           }}
 
           .dep .brand-logo {{
-            width: 228px;
+            width: 190px;
           }}
 
           .dep .accent-bar-center {{
-            width: 170px;
-            height: 10px;
-            background: #2aa357;
+            left: 56px;
+            transform: none;
+            bottom: 18px;
+            width: 150px;
+            height: 8px;
+            background: #1f8b4c;
           }}
         </style>
       </head>
       <body>
         <div class="canvas dep">
-          <div class="section-chip">{section_label}</div>
           <div class="bottom-panel"></div>
           <div class="title-wrap">
-            {meta_html}
+            <div class="sport-meta">{sport_meta}</div>
             <h1 class="title">{title}</h1>
           </div>
           <div class="brand-wrap-center">{logo_html(logo_data)}</div>
