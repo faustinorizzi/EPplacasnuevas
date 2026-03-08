@@ -1,4 +1,4 @@
-RENDER_VERSION = "GA-V2-CLEAN-11"
+RENDER_VERSION = "GA-V2-CLEAN-12"
 
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
@@ -318,11 +318,25 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
 def build_deportes(title, description, image_data, section_label, logo_data) -> str:
     bg = safe_bg_style(
         image_data=image_data,
-        overlay_top="rgba(0,0,0,.06)",
-        overlay_bottom="rgba(12,18,12,.60)",
-        fallback_a="#1f221d",
-        fallback_b="#0f100c",
+        overlay_top="rgba(0,0,0,.05)",
+        overlay_bottom="rgba(8,14,10,.66)",
+        fallback_a="#1b1f1a",
+        fallback_b="#0d0f0d",
     )
+
+    title_lower = (title or "").lower()
+
+    sport_meta = ""
+    if any(x in title_lower for x in ["gp", "fórmula 1", "formula 1", "largará", "clasific"]):
+        sport_meta = "CLASIFICACIÓN"
+    elif any(x in title_lower for x in ["vs", "venció", "perdió", "ganó", "triunfo", "triunfó"]):
+        sport_meta = "RESULTADO"
+    elif any(x in title_lower for x in ["fecha", "hoy", "hora", "horario", "agenda"]):
+        sport_meta = "AGENDA"
+    elif any(x in title_lower for x in ["liga", "torneo", "copa", "campeonato"]):
+        sport_meta = "COMPETENCIA"
+
+    meta_html = f'<div class="sport-meta">{sport_meta}</div>' if sport_meta else ""
 
     return f"""
     <html>
@@ -343,31 +357,60 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             inset: 0;
             background: linear-gradient(
               to top,
-              rgba(0,0,0,.07) 0%,
-              rgba(0,0,0,0) 38%
+              rgba(0,0,0,.10) 0%,
+              rgba(0,0,0,0) 36%
             );
             z-index: 1;
             pointer-events: none;
           }}
 
           .dep .section-chip {{
-            background: rgba(201, 109, 43, .28);
-            border: 1px solid rgba(225, 142, 80, .46);
+            background: rgba(31, 139, 76, .34);
+            border: 1px solid rgba(82, 188, 88, .52);
             color: #fff;
+          }}
+
+          .dep .bottom-panel {{
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 390px;
+            background: linear-gradient(
+              to top,
+              rgba(0,0,0,.72) 0%,
+              rgba(0,0,0,.50) 55%,
+              rgba(0,0,0,0) 100%
+            );
+            z-index: 3;
           }}
 
           .dep .title-wrap {{
             position: absolute;
             left: 56px;
-            right: 100px;
-            bottom: 196px;
+            right: 92px;
+            bottom: 184px;
             z-index: 5;
           }}
 
+          .dep .sport-meta {{
+            display: inline-block;
+            margin-bottom: 18px;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: rgba(201, 109, 43, .92);
+            color: #fff;
+            font-family: 'PT Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+          }}
+
           .dep .title {{
-            font-size: 72px;
+            font-size: 68px;
             max-width: 860px;
-            text-shadow: 0 2px 7px rgba(0,0,0,.16);
+            text-shadow: 0 2px 7px rgba(0,0,0,.18);
           }}
 
           .dep .brand-logo {{
@@ -377,14 +420,16 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
           .dep .accent-bar-center {{
             width: 170px;
             height: 10px;
-            background: #c96d2b;
+            background: #2aa357;
           }}
         </style>
       </head>
       <body>
         <div class="canvas dep">
           <div class="section-chip">{section_label}</div>
+          <div class="bottom-panel"></div>
           <div class="title-wrap">
+            {meta_html}
             <h1 class="title">{title}</h1>
           </div>
           <div class="brand-wrap-center">{logo_html(logo_data)}</div>
