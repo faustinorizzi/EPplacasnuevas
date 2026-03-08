@@ -112,29 +112,120 @@ def build_deportes_a(title, image_data, section_label, logo_data):
     </html>
     """
 
-def build_deportes_b(title, image_data, section_label, logo_data):
-    """VARIANTE B: Transparente con tinte verde y barra naranja."""
-    bg = safe_bg_style(image_data, "rgba(20,45,25,0.4)", "rgba(10,30,15,0.95)", "#1a3b2a", "#0a1e0f")
+def build_deportes(title, description, image_data, section_label, logo_data) -> str:
+    photo_style = f"background-image: url('{image_data}');" if image_data else "background: linear-gradient(135deg, #273126 0%, #1a2119 100%);"
+
+    raw_title = (title or "").strip()
+    title_html = raw_title
+
+    # Lógica de detección para el resaltado
+    if ":" in raw_title:
+        left, right = raw_title.split(":", 1)
+        if left.strip():
+            title_html = f'<span class="title-highlight">{left.strip()}:</span> {right.strip()}'
+    else:
+        words = raw_title.split()
+        if len(words) >= 4:
+            # Resalta las primeras 3 palabras si no hay ":"
+            title_html = f'<span class="title-highlight">{" ".join(words[:3])}</span> {" ".join(words[3:])}'
+
     return f"""
     <html>
-      <head><meta charset="utf-8">{global_styles()}
+      <head>
+        <meta charset="utf-8">
+        {global_styles()}
         <style>
-          .dep-b {{ {bg} background-size: cover; background-position: center; }}
-          .content-wrap {{
-            position: absolute; bottom: 180px; left: 56px; right: 56px;
-            display: flex; align-items: stretch; gap: 24px; z-index: 5;
+          .depb {{
+            background: #efede8;
+            color: #111;
           }}
-          .accent-bar {{ width: 14px; background: #f37021; flex-shrink: 0; }}
-          .title {{ font-size: 95px; color: #fff; text-shadow: 0 5px 15px rgba(0,0,0,0.6); }}
+
+          .depb .photo {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1080px;
+            height: 760px;
+            {photo_style}
+            background-size: cover;
+            background-position: center;
+          }}
+
+          .depb .photo::after {{
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(0,0,0,.03), rgba(0,0,0,.15));
+          }}
+
+          .depb .panel {{
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 480px; /* Un poco más alto para dar aire al bloque */
+            background: #efede8;
+            padding: 40px 56px;
+          }}
+
+          .depb .bar {{
+            position: absolute;
+            left: 56px;
+            top: 40px;
+            width: 14px;
+            height: 140px;
+            background: #f37021; /* Naranja disruptivo de El Periódico */
+            border-radius: 2px;
+          }}
+
+          .depb .inner {{
+            margin-left: 34px;
+          }}
+
+          .depb .title {{
+            font-size: 72px;
+            font-weight: 400;
+            color: #111;
+            max-width: 880px;
+            line-height: 1.2; /* Ajustado para que el highlight no se encime */
+          }}
+
+          /* EL RESALTADO TIPO MARCADOR */
+          .depb .title-highlight {{
+            background-color: #f37021; /* Fondo naranja sólido */
+            color: #ffffff;            /* Texto blanco sobre el fondo */
+            padding: 4px 15px;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+            display: inline;
+          }}
+
+          .depb .brand-wrap-center {{
+            bottom: 40px;
+          }}
+
+          .depb .brand-logo {{
+            width: 228px;
+          }}
+
+          .depb .accent-bar-center {{
+            width: 138px;
+            height: 7px;
+            background: #1f8b4c;
+          }}
         </style>
       </head>
       <body>
-        <div class="canvas dep-b">
-          <div class="section-chip">{section_label}</div>
-          <div class="content-wrap">
-            <div class="accent-bar"></div><h1 class="title">{title}</h1>
+        <div class="canvas depb">
+          <div class="photo"></div>
+          <div class="panel">
+            <div class="bar"></div>
+            <div class="inner">
+              <h1 class="title">{title_html}</h1>
+            </div>
+            <div class="brand-wrap-center">{logo_html(logo_data)}</div>
+            <div class="accent-bar-center"></div>
           </div>
-          {logo_html(logo_data)}
         </div>
       </body>
     </html>
