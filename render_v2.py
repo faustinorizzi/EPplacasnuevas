@@ -1,4 +1,4 @@
-RENDER_VERSION = "GA-V2-CLEAN-16"
+RENDER_VERSION = "GA-V2-CLEAN-17"
 
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
@@ -364,9 +364,9 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
             left: 0;
             right: 0;
             bottom: 0;
-            height: 470px;
+            height: 400px;
             background: #efede8;
-            padding: 34px 56px 24px 56px;
+            padding: 24px 56px 18px 56px;
           }}
 
           .depb .bar {{
@@ -396,7 +396,7 @@ def build_deportes(title, description, image_data, section_label, logo_data) -> 
           }}
 
           .depb .brand-wrap-center {{
-            bottom: 34px;
+            bottom: 54px;
           }}
 
           .depb .brand-logo {{
