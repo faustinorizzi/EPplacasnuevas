@@ -1,4 +1,4 @@
-RENDER_VERSION = "GA-V2-CLEAN-07"
+RENDER_VERSION = "GA-V2-CLEAN-08"
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
     if image_data:
@@ -223,9 +223,9 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
             left: 0;
             right: 0;
             bottom: 0;
-            height: 570px;
+            height: 520px;
             background: #f1efea;
-            padding: 54px 56px 50px 56px;
+            padding: 46px 56px 34px 56px;
           }}
 
           .gb .bar {{
@@ -265,12 +265,12 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
           }}
 
           .gb .desc {{
-            color: #3d3d3d;
-            font-size: 23px;
-            line-height: 1.34;
-            max-width: 790px;
-            margin-top: 18px;
-          }}
+    color: #3d3d3d;
+    font-size: 25px;
+    line-height: 1.34;
+    max-width: 790px;
+    margin-top: 18px;
+}}
 
           .gb .brand-wrap-center {{
             bottom: 38px;
