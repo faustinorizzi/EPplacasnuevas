@@ -1,4 +1,4 @@
-RENDER_VERSION = "GA-V2-CLEAN-04"
+RENDER_VERSION = "GA-V2-CLEAN-05"
 
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
@@ -51,20 +51,20 @@ def global_styles() -> str:
       }
 
       .section-chip {
-        position: absolute;
-        top: 48px;
-        left: 56px;
-        padding: 10px 18px;
-        border-radius: 999px;
-        background: rgba(31, 139, 76, .24);
-        border: 1px solid rgba(66, 171, 108, .42);
-        color: #fff;
-        font-size: 18px;
-        font-weight: 700;
-        letter-spacing: .04em;
-        text-transform: uppercase;
-        z-index: 6;
-        backdrop-filter: blur(4px);
+    position: absolute;
+    top: 48px;
+    left: 56px;
+    padding: 11px 20px;
+    border-radius: 999px;
+    background: rgba(31, 139, 76, .34);
+    border: 1px solid rgba(82, 188, 88, .52);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    z-index: 6;
+    backdrop-filter: blur(4px);
       }
 
       .title {
@@ -114,11 +114,11 @@ def global_styles() -> str:
 
 def build_general_a(title, description, image_data, section_label, logo_data) -> str:
     bg = safe_bg_style(
-        image_data=image_data,
-        overlay_top="rgba(0,0,0,.07)",
-        overlay_bottom="rgba(0,0,0,.58)",
-        fallback_a="#1a1f1b",
-        fallback_b="#0f120f",
+    image_data=image_data,
+    overlay_top="rgba(0,0,0,.07)",
+    overlay_bottom="rgba(8,28,16,.62)",
+    fallback_a="#1a1f1b",
+    fallback_b="#0f120f",
     )
 
     return f"""
@@ -165,11 +165,11 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
             width: 228px;
           }}
 
-          .ga .accent-bar-center {{
-            width: 148px;
-            height: 7px;
-            background: #1f8b4c;
-          }}
+          .ga .accent-bar-center {
+    width: 170px;
+    height: 9px;
+    background: #2aa357;
+}
         </style>
       </head>
       <body>
