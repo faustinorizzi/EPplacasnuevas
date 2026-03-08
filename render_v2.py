@@ -1,4 +1,4 @@
-RENDER_VERSION = "CONTROL-06-OK"
+RENDER_VERSION = "GA-V2-CLEAN-07"
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
     if image_data:
@@ -196,7 +196,7 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
         {global_styles()}
         <style>
           .gb {{
-            background: #f3f2ef;
+            background: #f1efea;
             color: #111;
           }}
 
@@ -205,7 +205,7 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
             top: 0;
             left: 0;
             width: 1080px;
-            height: 742px;
+            height: 780px;
             {photo_style}
             background-size: cover;
             background-position: center;
@@ -215,12 +215,7 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(rgba(0,0,0,.05), rgba(0,0,0,.16));
-          }}
-
-          .gb .section-chip {{
-            background: rgba(31, 139, 76, .28);
-            border: 1px solid rgba(66, 171, 108, .44);
+            background: linear-gradient(rgba(0,0,0,.02), rgba(0,0,0,.10));
           }}
 
           .gb .panel {{
@@ -228,35 +223,49 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
             left: 0;
             right: 0;
             bottom: 0;
-            height: 608px;
-            background: #f3f2ef;
-            padding: 52px 56px 48px 56px;
+            height: 570px;
+            background: #f1efea;
+            padding: 54px 56px 50px 56px;
           }}
 
           .gb .bar {{
-            width: 12px;
-            height: 104px;
-            background: #1f8b4c;
             position: absolute;
             left: 56px;
-            top: 58px;
+            top: 56px;
+            width: 14px;
+            height: 118px;
+            background: #1f8b4c;
             border-radius: 2px;
           }}
 
           .gb .inner {{
-            margin-left: 32px;
+            margin-left: 34px;
+          }}
+
+          .gb .section-chip-inline {{
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: rgba(31, 139, 76, .14);
+            border: 1px solid rgba(66, 171, 108, .34);
+            color: #1f8b4c;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
           }}
 
           .gb .title {{
-            font-size: 57px;
+            font-size: 58px;
             font-weight: 400;
             color: #111;
             max-width: 820px;
-            line-height: 1.09;
+            line-height: 1.08;
           }}
 
           .gb .desc {{
-            color: #3a3a3a;
+            color: #3d3d3d;
             font-size: 23px;
             line-height: 1.34;
             max-width: 790px;
@@ -264,15 +273,16 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
           }}
 
           .gb .brand-wrap-center {{
-            bottom: 40px;
+            bottom: 38px;
           }}
 
           .gb .brand-logo {{
             width: 228px;
+            filter: none;
           }}
 
           .gb .accent-bar-center {{
-            width: 148px;
+            width: 138px;
             height: 7px;
             background: #1f8b4c;
           }}
@@ -281,10 +291,10 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
       <body>
         <div class="canvas gb">
           <div class="photo"></div>
-          <div class="section-chip">{section_label}</div>
           <div class="panel">
             <div class="bar"></div>
             <div class="inner">
+              <div class="section-chip-inline">{section_label}</div>
               <h1 class="title">{title}</h1>
               {desc_html}
             </div>
