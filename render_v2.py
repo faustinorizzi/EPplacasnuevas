@@ -1,5 +1,6 @@
 RENDER_VERSION = "GA-V2-CLEAN-07"
 
+
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
     if image_data:
         return f"background-image: linear-gradient({overlay_top}, {overlay_bottom}), url('{image_data}');"
@@ -50,21 +51,21 @@ def global_styles() -> str:
       }
 
       .section-chip {
-    position: absolute;
-    top: 48px;
-    left: 56px;
-    padding: 12px 22px;
-    border-radius: 999px;
-    background: rgba(31, 139, 76, .24);
-    border: 1px solid rgba(66, 171, 108, .42);
-    color: #fff;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    z-index: 6;
-    backdrop-filter: blur(4px);
-}
+        position: absolute;
+        top: 48px;
+        left: 56px;
+        padding: 12px 22px;
+        border-radius: 999px;
+        background: rgba(31, 139, 76, .34);
+        border: 1px solid rgba(82, 188, 88, .52);
+        color: #fff;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        z-index: 6;
+        backdrop-filter: blur(4px);
+      }
 
       .title {
         font-family: 'Passion One', sans-serif;
@@ -113,12 +114,12 @@ def global_styles() -> str:
 
 def build_general_a(title, description, image_data, section_label, logo_data) -> str:
     bg = safe_bg_style(
-    image_data=image_data,
-    overlay_top="rgba(0,0,0,.07)",
-    overlay_bottom="rgba(10,40,20,.68)",
-    fallback_a="#1a1f1b",
-    fallback_b="#0f120f",
-)
+        image_data=image_data,
+        overlay_top="rgba(0,0,0,.07)",
+        overlay_bottom="rgba(10,40,20,.68)",
+        fallback_a="#1a1f1b",
+        fallback_b="#0f120f",
+    )
 
     return f"""
     <html>
@@ -165,10 +166,10 @@ def build_general_a(title, description, image_data, section_label, logo_data) ->
           }}
 
           .ga .accent-bar-center {{
-    width: 190px;
-    height: 10px;
-    background: #2aa357;
-}}
+            width: 190px;
+            height: 10px;
+            background: #2aa357;
+          }}
         </style>
       </head>
       <body>
@@ -244,12 +245,12 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
 
           .gb .section-chip-inline {{
             display: inline-block;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 999px;
-            background: rgba(31, 139, 76, .14);
+            background: rgba(31, 139, 76, .16);
             border: 1px solid rgba(66, 171, 108, .34);
             color: #1f8b4c;
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 700;
             letter-spacing: .04em;
             text-transform: uppercase;
@@ -278,7 +279,6 @@ def build_general_b(title, description, image_data, section_label, logo_data) ->
 
           .gb .brand-logo {{
             width: 228px;
-            filter: none;
           }}
 
           .gb .accent-bar-center {{
