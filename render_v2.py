@@ -1,4 +1,4 @@
-RENDER_VERSION = "GA-V2-CLEAN-09"
+RENDER_VERSION = "GA-V2-CLEAN-10"
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
     if image_data:
@@ -13,7 +13,7 @@ def logo_html(logo_data: str) -> str:
 
 
 def build_post_html(title: str, description: str, image_data: str, section_label: str, family: str, logo_white_data: str, logo_green_data: str) -> str:
-        title = (title or "").strip()
+            title = (title or "").strip()
     description = (description or "").strip()
 
     if family == "general_b":
