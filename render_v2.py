@@ -1,5 +1,5 @@
-RENDER_VERSION = "GENERAL-A-LAB-02side"
-GENERAL_A_EXPERIMENT_MODE = "side_left"  # classic | top_band | bottom_band | side_left | superblock | double_level | hybrid_strip
+RENDER_VERSION = "GENERAL-A-LAB-02super"
+GENERAL_A_EXPERIMENT_MODE = "superblock"  # classic | top_band | bottom_band | side_left | superblock | double_level | hybrid_strip
 
 
 
