@@ -1,5 +1,6 @@
 RENDER_VERSION = "GENERAL-A-PROTOTYPES-01"
 
+
 def logo_html(logo_data: str) -> str:
     if not logo_data:
         return ""
