@@ -1,5 +1,5 @@
 RENDER_VERSION = "GENERAL-A-LAB-02dlevel"
-GENERAL_A_EXPERIMENT_MODE = "double_level"  # classic | top_band | bottom_band | side_left | superblock | double_level | hybrid_strip
+GENERAL_A_EXPERIMENT_MODE = "hybrid_strip"  # classic | top_band | bottom_band | side_left | superblock | double_level | hybrid_strip
 
 
 
