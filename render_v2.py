@@ -1,5 +1,4 @@
 import base64
-
 RENDER_VERSION = "EL-PERIODICO-DISRUPTIVE-V7"
 
 def logo_html(logo_data: str) -> str:
