@@ -1,4 +1,4 @@
-RENDER_VERSION = "GENERAL-A-PROTOTYPES-01"
+RENDER_VERSION = "GENERAL-A-PROTOTYPES-00"
 
 
 def logo_html(logo_data: str) -> str:
