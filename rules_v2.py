@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+import re
 
 
 def infer_section_from_url(url: str) -> str:
@@ -51,12 +52,52 @@ def display_section_label(url: str) -> str:
     return labels.get(first, "GENERAL")
 
 
+def has_number(text: str) -> bool:
+    return bool(re.search(r"\d", text or ""))
+
+
 def choose_family(section: str, title: str, description: str) -> str:
     title = (title or "").strip()
-    description = (description or "").strip().lower()
+    description = (description or "").strip()
+
+    title_lower = title.lower()
+    description_lower = description.lower()
+    full_text = f"{title_lower} {description_lower}"
 
     if section == "deportes":
-        return "deportes"
+        sports_b_keywords = [
+            "agenda",
+            "programación",
+            "programacion",
+            "tv",
+            "televisa",
+            "televisado",
+            "transmite",
+            "transmisión",
+            "transmision",
+            "árbitro",
+            "arbitro",
+            "árbitros",
+            "arbitros",
+            "horario",
+            "horarios",
+            "cronograma",
+            "fixture",
+            "fecha",
+            "fechas",
+            "hora",
+            "horas",
+            "día",
+            "dias",
+            "días",
+            "cuándo",
+            "cuando",
+        ]
+
+        if any(k in full_text for k in sports_b_keywords):
+            return "deportes_b"
+
+        return "deportes_a"
 
     if section == "policiales":
         return "policiales"
@@ -64,7 +105,7 @@ def choose_family(section: str, title: str, description: str) -> str:
     if section == "general_b":
         return "general_b"
 
-    keywords = [
+    general_b_keywords = [
         "invitan",
         "charla",
         "curso",
@@ -81,9 +122,50 @@ def choose_family(section: str, title: str, description: str) -> str:
 
     title_long = len(title) >= 95
     desc_present = len(description) >= 80
-    has_keyword = any(k in description or k in title.lower() for k in keywords)
+    has_general_b_keyword = any(k in full_text for k in general_b_keywords)
 
-    if (title_long and has_keyword) or (has_keyword and desc_present):
+    if (title_long and has_general_b_keyword) or (has_general_b_keyword and desc_present):
         return "general_b"
+
+    general_a1_keywords = [
+        "entregó",
+        "entrego",
+        "anunció",
+        "anuncio",
+        "inauguró",
+        "inauguro",
+        "obra",
+        "obras",
+        "plan",
+        "programa",
+        "beneficio",
+        "beneficios",
+        "apertura",
+        "habilitan",
+        "habilitó",
+        "habilito",
+        "lanzó",
+        "lanzo",
+        "lanzamiento",
+        "firmó",
+        "firmo",
+        "firma",
+        "convenio",
+        "licitación",
+        "licitacion",
+        "inversión",
+        "inversion",
+        "millones",
+        "pesos",
+        "subsidio",
+        "subsidios",
+        "financiamiento",
+    ]
+
+    has_a1_keyword = any(k in full_text for k in general_a1_keywords)
+    has_numeric_signal = has_number(full_text) or "%" in full_text
+
+    if has_a1_keyword or has_numeric_signal:
+        return "general_a1"
 
     return "general_a"
