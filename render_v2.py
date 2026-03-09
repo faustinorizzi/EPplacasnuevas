@@ -1,5 +1,5 @@
-RENDER_VERSION = "GENERAL-A-LAB-COMPAT-01"
-GENERAL_A_EXPERIMENT_MODE = "base"  # "base" | "corte" | "doble"
+RENDER_VERSION = "GENERAL-A-LAB-COMPAT-01C"
+GENERAL_A_EXPERIMENT_MODE = "corte"  # "base" | "corte" | "doble"
 
 
 def safe_bg_style(
