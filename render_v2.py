@@ -1,6 +1,6 @@
 import base64
 
-RENDER_VERSION = "EL-PERIODICO-INNOVATOR-V4"
+RENDER_VERSION = "EL-PERIODICO-FINAL-V5"
 
 def safe_bg_style(image_data: str, overlay_top: str, overlay_bottom: str, fallback_a: str, fallback_b: str) -> str:
     if image_data:
@@ -13,10 +13,10 @@ def logo_html(logo_data: str) -> str:
     return f'<img src="{logo_data}" alt="El Periódico" class="brand-logo" />'
 
 def global_styles() -> str:
-    """Estilos base con Passion One (identidad del impreso) y Barlow."""
+    """Estilos base con Passion One y Barlow."""
     return """
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;700;800&display=swap');
       
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { background: #eee; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -27,7 +27,6 @@ def global_styles() -> str:
         position: relative;
         overflow: hidden;
         background: #fff;
-        font-family: 'Passion One', cursive;
       }
 
       .section-chip {
@@ -64,11 +63,12 @@ def build_post_html(
     logo_white_data: str,
     logo_green_data: str,
 ) -> str:
+    """Ruteador principal corregido."""
     title = (title or "").strip()
     description = (description or "").strip()
 
-    # Ruteo unificado para asegurar que Deportes B siempre use el resaltado
-    if family == "deportes_b" or family == "deportes":
+    # Si elegís deportes o deportes_b, va a la nueva placa con marcador naranja
+    if family in ["deportes", "deportes_b"]:
         return build_deportes_b(title, description, image_data, section_label, logo_green_data)
     
     if family == "deportes_a":
@@ -82,87 +82,81 @@ def build_post_html(
     
     return build_general_a(title, description, image_data, section_label, logo_green_data)
 
-def build_deportes_a(title, description, image_data, section_label, logo_data):
-    """VARIANTE A: Impacto con Diagonal."""
-    bg = safe_bg_style(image_data, "rgba(0,0,0,0.2)", "rgba(0,0,0,0.6)", "#1a3b2a", "#1a3b2a")
+def build_deportes_b(title, description, image_data, section_label, logo_data):
+    """VARIANTE B: Base General B con marcador naranja."""
+    photo_style = f"background-image: url('{image_data}');" if image_data else ""
+    
+    # Lógica de resaltado
+    if ":" in title:
+        left, right = title.split(":", 1)
+        title_html = f'<span class="marcador">{left.strip()}:</span> {right.strip()}'
+    else:
+        words = title.split()
+        if len(words) >= 3:
+            title_html = f'<span class="marcador">{" ".join(words[:3])}</span> {" ".join(words[3:])}'
+        else:
+            title_html = f'<span class="marcador">{title}</span>'
+
     return f"""
     <html>
       <head><meta charset="utf-8">{global_styles()}
         <style>
-          .depa {{ {bg} background-size: cover; background-position: center; }}
-          .footer-block {{
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            background: #1a3b2a; padding: 120px 56px 180px 56px;
-            clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 100%);
+          .depb {{ background: #fff; font-family: 'Barlow', sans-serif; }}
+          .photo {{ position: absolute; top: 0; left: 0; width: 100%; height: 800px; {photo_style} background-size: cover; background-position: center; }}
+          .content {{ position: absolute; bottom: 0; left: 0; right: 0; height: 550px; padding: 60px 56px; background: #fff; }}
+          .title {{ font-size: 80px; color: #1a1a1a; font-weight: 800; line-height: 1.1; }}
+          .marcador {{ 
+            background: #f37021 !important; 
+            color: #fff !important; 
+            padding: 2px 12px; 
+            display: inline; 
+            box-decoration-break: clone; 
+            -webkit-box-decoration-break: clone;
           }}
-          .title {{ font-size: 110px; color: #fff; line-height: 0.9; text-transform: uppercase; }}
-          .section-chip {{ background: #f37021; top: auto; bottom: 580px; }}
+          .accent {{ width: 12px; height: 100px; background: #f37021; float: left; margin-right: 25px; }}
         </style>
       </head>
       <body>
-        <div class="canvas depa">
-          <div class="section-chip">{section_label}</div>
-          <div class="footer-block"><h1 class="title">{title}</h1></div>
+        <div class="canvas depb">
+          <div class="section-chip" style="background: #f37021;">{section_label}</div>
+          <div class="photo"></div>
+          <div class="content">
+            <div class="accent"></div>
+            <h1 class="title">{title_html}</h1>
+          </div>
           {logo_html(logo_data)}
         </div>
       </body>
     </html>
     """
 
-def build_deportes_b(title, description, image_data, section_label, logo_data):
-    """VARIANTE B: Servicio con Resaltado Sólido tipo Marcador."""
+def build_general_b(title, description, image_data, section_label, logo_data):
+    """GENERAL B: Estilo limpio tradicional."""
     photo_style = f"background-image: url('{image_data}');" if image_data else ""
-    
-    # Lógica de resaltado forzada para que se vea el bloque naranja
-    if ":" in title:
-        left, right = title.split(":", 1)
-        title_html = f'<span class="marcador-naranja">{left.strip()}:</span> {right.strip()}'
-    else:
-        words = title.split()
-        if len(words) >= 3:
-            title_html = f'<span class="marcador-naranja">{" ".join(words[:3])}</span> {" ".join(words[3:])}'
-        else:
-            title_html = f'<span class="marcador-naranja">{title}</span>'
-
     return f"""
     <html>
       <head><meta charset="utf-8">{global_styles()}
         <style>
-          .depb {{ background: #efede8; }}
-          .photo {{ position: absolute; top: 0; left: 0; width: 100%; height: 760px; {photo_style} background-size: cover; background-position: center; }}
-          .panel {{ position: absolute; bottom: 0; left: 0; right: 0; height: 520px; background: #efede8; padding: 60px 56px; }}
-          .bar {{ position: absolute; left: 56px; top: 60px; width: 14px; height: 160px; background: #f37021; }}
-          .inner {{ margin-left: 40px; }}
-          .title {{ font-size: 75px; color: #111; line-height: 1.25; text-transform: uppercase; }}
-          
-          /* ESTILO MARCADOR SÓLIDO */
-          .marcador-naranja {{ 
-            background: #f37021 !important; 
-            color: #fff !important; 
-            padding: 5px 15px; 
-            display: inline; 
-            box-decoration-break: clone; 
-            -webkit-box-decoration-break: clone;
-          }}
-          
-          .brand-logo {{ bottom: 40px; right: 56px; width: 220px; }}
+          .genb {{ background: #fff; font-family: 'Barlow', sans-serif; }}
+          .photo {{ position: absolute; top: 0; left: 0; width: 100%; height: 800px; {photo_style} background-size: cover; background-position: center; }}
+          .content {{ position: absolute; bottom: 0; left: 0; right: 0; height: 550px; padding: 60px 56px; background: #fff; }}
+          .title {{ font-size: 80px; color: #1a1a1a; font-weight: 800; line-height: 1.1; }}
+          .accent {{ width: 12px; height: 100px; background: #2d572c; float: left; margin-right: 25px; }}
         </style>
       </head>
       <body>
-        <div class="canvas depb">
+        <div class="canvas genb">
+          <div class="section-chip">{section_label}</div>
           <div class="photo"></div>
-          <div class="panel">
-            <div class="bar"></div>
-            <div class="inner"><h1 class="title">{title_html}</h1></div>
-            {logo_html(logo_data)}
-          </div>
+          <div class="content"><div class="accent"></div><h1 class="title">{title}</h1></div>
+          {logo_html(logo_data)}
         </div>
       </body>
     </html>
     """
 
 def build_general_a(title, description, image_data, section_label, logo_data):
-    """GENERAL A: Líder."""
+    """GENERAL A: Impacto / Fondo oscuro."""
     bg = safe_bg_style(image_data, "rgba(0,0,0,0.1)", "rgba(0,0,0,0.8)", "#2d572c", "#1a331b")
     return f"""
     <html>
@@ -183,32 +177,7 @@ def build_general_a(title, description, image_data, section_label, logo_data):
     </html>
     """
 
-def build_general_b(title, description, image_data, section_label, logo_data):
-    """GENERAL B: Cercanía."""
-    return f"""
-    <html>
-      <head><meta charset="utf-8">{global_styles()}
-        <style>
-          .genb {{ background: #fff; font-family: 'Barlow', sans-serif; }}
-          .photo {{ position: absolute; top: 0; left: 0; width: 100%; height: 800px; background-image: url('{image_data}'); background-size: cover; }}
-          .content {{ position: absolute; bottom: 0; left: 0; right: 0; height: 550px; padding: 60px 56px; background: #fff; }}
-          .title {{ font-size: 80px; color: #1a1a1a; font-weight: 800; line-height: 1; }}
-          .accent {{ width: 12px; height: 100px; background: #2d572c; float: left; margin-right: 25px; }}
-        </style>
-      </head>
-      <body>
-        <div class="canvas genb">
-          <div class="section-chip">{section_label}</div>
-          <div class="photo"></div>
-          <div class="content"><div class="accent"></div><h1 class="title">{title}</h1></div>
-          {logo_html(logo_data)}
-        </div>
-      </body>
-    </html>
-    """
-
 def build_policiales(title, description, image_data, section_label, logo_data):
-    """POLICIALES: Seriedad."""
     bg = safe_bg_style(image_data, "rgba(0,0,0,0.4)", "rgba(0,0,0,0.9)", "#000", "#222")
     return f"""
     <html>
@@ -224,6 +193,32 @@ def build_policiales(title, description, image_data, section_label, logo_data):
         <div class="canvas pol">
           <div class="section-chip">{section_label}</div>
           <div class="title-wrap"><h1 class="title">{title}</h1></div>
+          {logo_html(logo_data)}
+        </div>
+      </body>
+    </html>
+    """
+
+def build_deportes_a(title, description, image_data, section_label, logo_data):
+    bg = safe_bg_style(image_data, "rgba(0,0,0,0.2)", "rgba(0,0,0,0.6)", "#1a3b2a", "#1a3b2a")
+    return f"""
+    <html>
+      <head><meta charset="utf-8">{global_styles()}
+        <style>
+          .depa {{ {bg} background-size: cover; background-position: center; }}
+          .footer-block {{
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: #1a3b2a; padding: 120px 56px 180px 56px;
+            clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 100%);
+          }}
+          .title {{ font-size: 110px; color: #fff; line-height: 0.9; text-transform: uppercase; }}
+          .section-chip {{ background: #f37021; top: auto; bottom: 580px; }}
+        </style>
+      </head>
+      <body>
+        <div class="canvas depa">
+          <div class="section-chip">{section_label}</div>
+          <div class="footer-block"><h1 class="title">{title}</h1></div>
           {logo_html(logo_data)}
         </div>
       </body>
