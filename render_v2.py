@@ -1,4 +1,4 @@
-RENDER_VERSION = "GENERAL-A-LAB-02"
+RENDER_VERSION = "GENERAL-A-LAB-03"
 GENERAL_A_EXPERIMENT_MODE = "top_band"  # classic | top_band | bottom_band | side_left | superblock | double_level | hybrid_strip
 
 
