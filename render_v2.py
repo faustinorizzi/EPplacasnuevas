@@ -2,6 +2,8 @@ RENDER_VERSION = "GENERAL-A-LAB-02"
 GENERAL_A_EXPERIMENT_MODE = "top_band"  # classic | top_band | bottom_band | side_left | superblock | double_level | hybrid_strip
 
 
+
+
 def logo_html(logo_data: str, extra_class: str = "") -> str:
     if not logo_data:
         return ""
