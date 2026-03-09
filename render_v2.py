@@ -1,4 +1,4 @@
-RENDER_VERSION = "V2-2026-03-09-BARLOW-12"
+RENDER_VERSION = "V2-2026-03-09-BARLOW-13"
 
 def safe_bg_style(
     image_data: str,
@@ -168,7 +168,7 @@ def build_general_a(title, description, image_data, section_label, logo_data):
           .title {{
             font-family: 'Barlow Condensed', sans-serif;
             font-size: 64px;
-            font-weight: 700;
+            font-weight: 900;
             line-height: 0.96;
             color: #fff;
           }}
@@ -257,7 +257,7 @@ def build_general_a1(title, description, image_data, section_label, logo_data):
           .title {{
             font-family: 'Barlow Condensed', sans-serif;
             font-size: 60px;
-            font-weight: 700;
+            font-weight: 900;
             line-height: 0.98;
             color: #141414;
           }}
@@ -359,7 +359,7 @@ def build_general_b(title, description, image_data, section_label, logo_data):
           .title {{
             font-family: 'Barlow Condensed', sans-serif;
             font-size: 60px;
-            font-weight: 700;
+            font-weight: 900;
             line-height: 1.00;
             color: #141414;
           }}
@@ -453,7 +453,7 @@ def build_deportes_a(title, description, image_data, section_label_unused, logo_
           .title {{
             font-family: 'Barlow Condensed', sans-serif;
             font-size: 68px;
-            font-weight: 700;
+            font-weight: 900;
             line-height: 0.95;
             color: #fff;
             text-transform: uppercase;
@@ -548,7 +548,7 @@ def build_deportes_b(title, description, image_data, section_label_unused, logo_
           .title {{
             font-family: 'Barlow Condensed', sans-serif;
             font-size: 64px;
-            font-weight: 700;
+            font-weight: 900;
             line-height: 0.99;
             color: #111;
           }}
@@ -629,7 +629,7 @@ def build_policiales(title, description, image_data, section_label, logo_data):
           .title {{
             font-family: 'Barlow Condensed', sans-serif;
             font-size: 64px;
-            font-weight: 700;
+            font-weight: 900;
             line-height: 0.96;
             color: #fff;
           }}
